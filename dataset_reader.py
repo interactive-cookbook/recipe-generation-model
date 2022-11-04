@@ -19,11 +19,11 @@ class AMRDataset(Dataset):
 
 
 def build_dataset(tokenizer: PreTrainedTokenizer, data_path, context_len: int,
-                  max_in_length: int, max_out_length, linearization: str = 'penman') -> Dataset:
+                  max_in_length: int, max_out_length,
+                  sep_token: str, linearization: str = 'penman') -> Dataset:
 
     data_set_entries = read_data_set(data_path, context_len, linearization)
-    # TODO maybe change special token
-    contextualized_input = [f'{c} <GRAPH> {g}' for (c, g) in zip(data_set_entries['context'], data_set_entries['graph'])]
+    contextualized_input = [f'{c} {sep_token} {g}' for (c, g) in zip(data_set_entries['context'], data_set_entries['graph'])]
     input_seqs = ['%s' % cont_gr for cont_gr in contextualized_input]
     target_seqs = ['%s' % sent for sent in data_set_entries['sent']]
 
@@ -89,7 +89,7 @@ def read_document(document_file, context_len, linearization:str = 'penman'):
         elif amr_data.startswith('# AMR release'):
             continue
         for line in amr_data.split('\n'):
-            if line.startswith('# ::snt'):
+            if line.startswith('# ::snt') and not line.startswith('# ::snt_'):
                 sentence = line[len('# ::snt'):].strip()
             elif line.startswith('# '):
                 continue

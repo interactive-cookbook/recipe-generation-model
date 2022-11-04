@@ -1,0 +1,29 @@
+{"gen_args": {
+    "model_name_or_path": "t5-base",
+    "corpus_dir": "./data/amr3_0",
+    "train_path": "train.txt",
+    "valid_path": "valid.txt",
+    "max_in_len": 1024,
+    "max_out_len": 1024,
+    "context_len": 0,
+    "linearization": "penman",
+    "sep_token": "<GRAPH>"
+  },
+    "train_args": {
+      "output_dir": "./models/test_train/t5_ms_amr",
+      "do_train": true,
+      "do_eval": false,
+      "overwrite_output_dir": false,
+      "prediction_loss_only": true,
+      "num_train_epochs": 8,
+      "save_steps": 1000,
+      "save_total_limit": 2,
+      "per_device_train_batch_size": 6,
+      "per_device_eval_batch_size": 6,
+      "gradient_accumulation_steps": 4,
+      "learning_rate": 1e-4,
+      "seed": 42,
+      "remove_unused_columns": false,
+      "no_cuda": true
+  }
+}

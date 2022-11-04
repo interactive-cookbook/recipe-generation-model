@@ -31,10 +31,10 @@ def train_generation_model(config_file):
 
     training_args = TrainingArguments(**config_args['train_args'])
 
-    run_training_loop(config_args['gen_args'], training_args)
+    _run_training_loop(config_args['gen_args'], training_args)
 
 
-def run_training_loop(general_config: dict, train_config: TrainingArguments):
+def _run_training_loop(general_config: dict, train_config: TrainingArguments):
 
     print("---------- Loading Model and Tokenizer ----------")
     model_path = general_config['model_name_or_path']
@@ -47,7 +47,8 @@ def run_training_loop(general_config: dict, train_config: TrainingArguments):
 
     # Add the new special token
     # information from here: https://github.com/huggingface/transformers/issues/8706
-    new_special_token = {'additional_special_tokens': ['<GRAPH>']}
+    separator_token = general_config['sep_token']
+    new_special_token = {'additional_special_tokens': [separator_token]}
     tokenizer.add_special_tokens(new_special_token)
     model.resize_token_embeddings(len(tokenizer))
 
@@ -62,14 +63,16 @@ def run_training_loop(general_config: dict, train_config: TrainingArguments):
                                   context_len=general_config['context_len'],
                                   linearization=general_config['linearization'],
                                   max_in_length=general_config['max_in_len'],
-                                  max_out_length=general_config['max_out_len'])
+                                  max_out_length=general_config['max_out_len'],
+                                  sep_token=separator_token)
     print(f'Loaded Training data set of {len(train_dataset)} instances.')
     valid_dataset = build_dataset(tokenizer=tokenizer,
                                   data_path=valid_data_path,
                                   context_len=general_config['context_len'],
                                   linearization=general_config['linearization'],
                                   max_in_length=general_config['max_in_len'],
-                                  max_out_length=general_config['max_out_len'])
+                                  max_out_length=general_config['max_out_len'],
+                                  sep_token=separator_token)
     print(f'Loaded validation data set of {len(valid_dataset)} instances.')
 
     print("---------- Starting training ----------")
