@@ -12,6 +12,9 @@ The [networkX library](https://networkx.org/documentation/stable/index.html):
 The [penman library](https://github.com/goodmami/penman/):
 * `pip install penman`
 
+The [pytorch library](https://pytorch.org/get-started/locally/)
+
+
 [Transformers](https://huggingface.co/docs/transformers/installation#install-with-conda) from Huggingface:
 * `pip install transformers` (resulted in an error for me on Windows 10, python 3.6 anaconda environment)
 * `conda install -c huggingface transformers` (was successful)
