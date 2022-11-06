@@ -101,4 +101,4 @@ class RecipeGenerator:
 
 if __name__=='__main__':
 
-    generator = generate_data_set('./inference_configs/inference_config.json')
+    generator = generate_data_set('inference_configs/inference_amrlib5_config.json')

@@ -4,6 +4,7 @@ from transformers import T5ForConditionalGeneration, T5Tokenizer, Trainer
 from transformers import TrainingArguments
 import json
 import torch.cuda
+import argparse
 
 from dataset_reader import build_dataset
 
@@ -81,12 +82,16 @@ def _run_training_loop(general_config: dict, train_config: TrainingArguments):
     trainer.train()
     print("---------- Finished training ----------")
     print("---------- Saving model and tokenizer ----------")
-    trainer.save_model(train_config['output_dir'])
-    tokenizer.save_pretrained(train_config['output_dir'])
+    trainer.save_model(train_config.output_dir)
+    tokenizer.save_pretrained(train_config.output_dir)
 
 
 if __name__=='__main__':
 
-    c = "./training_configs/training_config_3.json"
-
-    train_generation_model(c)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config", required=True, help="path to the configuration file for training")
+    args = parser.parse_args()
+    config_file = args.config
+    #config_file = "./training_configs/training_config_3.json"
+    print(torch.cuda.device_count())
+    #train_generation_model(config_file)
