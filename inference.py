@@ -47,20 +47,19 @@ def _run_inference(inference_config:dict, generator_config: dict):
             f.write(f'{ref_snt}\n')
 
 
-# TODO: rename task specific params key
 class RecipeGenerator:
     def __init__(self, configuration: dict):
         self.model = T5ForConditionalGeneration.from_pretrained(configuration['model_name_or_path'])
         self.tokenizer = T5Tokenizer.from_pretrained(configuration['tokenizer_name_or_path'])
-        self.max_in_len = self.model.config.task_specific_params['translation_amr_to_text']['max_in_len']
-        self.max_out_len = self.model.config.task_specific_params['translation_amr_to_text']['max_out_len']
+        self.max_in_len = self.model.config.task_specific_params['translation_cond_amr_to_text']['max_in_len']
+        self.max_out_len = self.model.config.task_specific_params['translation_cond_amr_to_text']['max_out_len']
 
         self.device = configuration['device'] if torch.cuda.is_available() else 'cpu'
         self.batch_size = configuration.get('batch_size', 1)
         self.num_beams = configuration.get('num_beams', 1)
         self.num_ret_seq = configuration.get('num_ret_seq', 1)
-        self.linearization = self.model.config.task_specific_params['translation_amr_to_text'].get('linearization', 'penman')
-        self.sep_token = self.model.config.task_specific_params['translation_amr_to_text'].get('sep_token', '')
+        self.linearization = self.model.config.task_specific_params['translation_cond_amr_to_text'].get('linearization', 'penman')
+        self.sep_token = self.model.config.task_specific_params['translation_cond_amr_to_text'].get('sep_token', '')
 
     # TODO: need to change linearization if implemented
     def generate(self, contexts, graphs):
@@ -101,4 +100,9 @@ class RecipeGenerator:
 
 if __name__=='__main__':
 
-    generator = generate_data_set('inference_configs/inference_amrlib5_config.json')
+    generate_data_set('inference_configs/inference_t5_ms_amr_no_context.json')
+    generate_data_set('inference_configs/inference_t5_ara1_no_context.json')
+    generate_data_set('inference_configs/inference_t5_ara1_orig_no_context.json')
+    generate_data_set('inference_configs/inference_t5_ms_amr.json')
+    generate_data_set('inference_configs/inference_t5_ara1.json')
+    generate_data_set('inference_configs/inference_t5_ara1_orig.json')
