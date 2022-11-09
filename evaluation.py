@@ -90,12 +90,10 @@ def compute_chrf_sacre(refs, preds):
 if __name__=='__main__':
 
 
-    run_eval('./output/0_context/output_amrlib_t5.txt')
-    run_eval('./output/0_context/output_ms_amr_t5.txt')
-    run_eval('./output/0_context/output_ara1_t5.txt')
-    run_eval('./output/0_context/output_ara1_orig_t5.txt')
+    #run_eval('./output/0_context_ara2/output_amrlib_t5.txt')
+    run_eval('./output/1_context_ara2/output_ms_amr_ara_t5.txt')
+    run_eval('./output/0_context_ara2/output_ms_amr_ara_t5.txt')
+    #run_eval('./output/0_train_context/output_for_ara1_from_ara1.txt')
+    #run_eval('./output/0_train_context/output_for_ara1_from_ara1_orig.txt')
 
-    run_eval('./output/1_context/output_ms_amr_t5.txt')
-    run_eval('./output/1_context/output_ara1_t5.txt')
-    run_eval('./output/1_context/output_ara1_orig_t5.txt')
 

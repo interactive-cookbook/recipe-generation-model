@@ -30,6 +30,7 @@ def build_dataset(tokenizer: PreTrainedTokenizer, data_path, context_len: int,
     # Encode input and target using tokenizer
     # original code had also truncation = True and max_length = X
     # TODO: decide what to do -> does not work to have padding and return_overflowing_tokens but not max_length and truncation
+    """
     input_encodings = tokenizer.batch_encode_plus(input_seqs,
                                                   padding=True)
     target_encodings = tokenizer.batch_encode_plus(target_seqs,
@@ -51,7 +52,7 @@ def build_dataset(tokenizer: PreTrainedTokenizer, data_path, context_len: int,
         if ie > 0 or te > 0:
             bi.add(i)
     num_trunc = len(bi)
-    """
+
     encodings = {'input_ids': torch.LongTensor(input_encodings['input_ids']),
                  'attention_mask': torch.LongTensor(input_encodings['attention_mask']),
                  'target_ids': torch.LongTensor(target_encodings['input_ids']),

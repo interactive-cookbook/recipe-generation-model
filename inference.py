@@ -67,6 +67,9 @@ class RecipeGenerator:
         assert isinstance(graphs, list)
         assert isinstance(contexts, list)
         assert len(graphs) == len(contexts)
+        for g in graphs:
+            assert not g.startswith('# ::'), "AMR graphs include metadata. Please remove the metadata to get the correct" \
+                                             "behavior of the model. "
 
         if not contexts:        # if used with original amrlib model
             contextualized_graphs = graphs
@@ -77,6 +80,8 @@ class RecipeGenerator:
         dataloader = DataLoader(contextualized_graphs, batch_size=self.batch_size)
         for batch in tqdm(dataloader):
             input_str = ['%s' % c_gr for c_gr in batch]
+            with open("debug_log.txt", "a", encoding="utf-8") as f:
+                f.write(f'{input_str}\n')
             input_encodings = self.tokenizer.batch_encode_plus(input_str,
                                                                padding=True,
                                                                truncation=True,
@@ -100,9 +105,10 @@ class RecipeGenerator:
 
 if __name__=='__main__':
 
-    generate_data_set('inference_configs/inference_t5_ms_amr_no_context.json')
-    generate_data_set('inference_configs/inference_t5_ara1_no_context.json')
-    generate_data_set('inference_configs/inference_t5_ara1_orig_no_context.json')
-    generate_data_set('inference_configs/inference_t5_ms_amr.json')
-    generate_data_set('inference_configs/inference_t5_ara1.json')
-    generate_data_set('inference_configs/inference_t5_ara1_orig.json')
+    generate_data_set('inference_configs/inference_debug.json')
+    #generate_data_set('inference_configs/inference_t5_ms_amr_ara_no_context.json')
+    #generate_data_set('inference_configs/inference_t5_ara1_no_context.json')
+    #generate_data_set('inference_configs/inference_t5_ara1_orig_no_context.json')
+    #generate_data_set('inference_configs/inference_t5_ms_amr.json')
+    #generate_data_set('inference_configs/inference_t5_ara1.json')
+    #generate_data_set('inference_configs/inference_t5_ara1_orig.json')

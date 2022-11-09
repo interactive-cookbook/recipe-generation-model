@@ -92,6 +92,6 @@ if __name__=='__main__':
     parser.add_argument("--config", required=True, help="path to the configuration file for training")
     args = parser.parse_args()
     config_file = args.config
-    #config_file = "./training_configs/training_config_3.json"
+    #config_file = "./training_configs/training_config_ara_dummy.json"
     print(torch.cuda.device_count())
-    #train_generation_model(config_file)
+    train_generation_model(config_file)
