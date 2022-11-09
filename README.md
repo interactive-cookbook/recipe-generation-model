@@ -23,3 +23,16 @@ The [pytorch library](https://pytorch.org/get-started/locally/)
 
 [Sacrebleu](https://github.com/mjpost/sacrebleu):
 * `pip install sacrebleu`
+
+
+## Run the training
+
+`python training.py --config [path_to_config_file]`
+
+where the config file should be a .json file including the configuration for the training following the format of the files in the [training_configs](https://github.com/interactive-cookbook/recipe-generation-model/tree/main/training_configs) folder. 
+
+## Run prediction
+
+`python inference.py --config [paht_ot_config_file`
+
+where the config file should be a .json file including the configuration for the inference following the format of the files in the [inference_configs](https://github.com/interactive-cookbook/recipe-generation-model/tree/main/inference_configs) folder. 
