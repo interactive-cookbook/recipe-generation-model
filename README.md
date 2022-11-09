@@ -24,6 +24,8 @@ The [pytorch library](https://pytorch.org/get-started/locally/)
 [Sacrebleu](https://github.com/mjpost/sacrebleu):
 * `pip install sacrebleu`
 
+## Data set preparation
+
 
 ## Run the training
 
@@ -125,3 +127,6 @@ Example
 * "output_file": path to the outputfile where all generated sentences get written to
 
 When running the inference.py script, this generates one single file for all the model predictions even if "test_path" is a directory with several files. Additionally, a second file is created containing all reference sentences for the generated sentences in the same order. This file has the same name as the one with the predictions, but with '\_references' as suffix. 
+
+
+## Automatic Evaluation
