@@ -72,15 +72,56 @@ The key, value pairs in the scope of "gen_args" are needed to specify the follow
 * "valid_path": path to the file with the complete validation data or to a folder with several files for validation; path is relative to "corpus_dir"
 * "max_in_len": maximum input length; tokenizer will truncate longer input sequences
 * "max_out_len": maximum output length; tokenizer will truncate longer target sequences
-* "context_len": number of previous sentences to preprend to the current input graph
+* "context_len": number of previous sentences of the same document to preprend to the current input graph
 * "linearization": type of linearization to use for the amr graph; currently only "penman" implemented
 * "sep_token": the special token that should be added between the current graph and the previous context; will be added as special token to the vocab of the tokenizer
 
+If "train_path" / "valid_path" is a directory, then each file in the directory is treated as one document if context_len > 0. If "train_path" / "valid_path" is a file, then that file is treated as one single document if context_len > 0.
+
 The "train_args" dictionary will be converted into a TrainingArguments object and passed to the transformer [Trainer](https://huggingface.co/docs/transformers/main_classes/trainer#trainer). See the [TrainerArguments](https://huggingface.co/docs/transformers/main_classes/trainer#transformers.TrainingArguments) documentation for information about possible parameters and default values. 
+
 **Important:** do not change "remove_unused_columns" to true or the functions will not work any more (see [here](https://github.com/huggingface/transformers/issues/9520) for more information)
+
+**Note**: the transformer Trainer.train() function by default uses all availabel gpu nodes if "no_cuda": false is set. In order to restrict training to a single gpu run e.g. `CUDA_VISIBLE_DEVICES="3", python training.py --config [path_to_config_file]`
 
 ## Run prediction
 
 `python inference.py --config [path_to_config_file`
 
 where the config file should be a .json file including the configuration for the inference following the format of the files in the [inference_configs](https://github.com/interactive-cookbook/recipe-generation-model/tree/main/inference_configs) folder. 
+
+Example
+```
+{
+  "generator_args": {
+    "model_name_or_path": "./models/t5_amrlib",
+    "tokenizer_name_or_path": "t5-base",
+    "device": "cpu",
+    "batch_size": 4,
+    "num_beams": 1,
+    "num_ret_seq": 1
+  },
+  "test_args": {
+    "corpus_dir": "./data/ara1_amrs",
+    "test_path": "test",
+    "context_len": 0,
+    "output_file": "./output/output_amrlib_t5.txt"
+  }
+}
+```
+
+"generator_args" are the parameters used for instantiating an RecipeGenerator object 
+* "model_name_or_path": path to a the folder of a model trained with the training.py script, folder must also contain the config.json generated during training
+* "tokenizer_name_or_path": path to the folder containing the tokenizer used for training the model; all relevant files get saved in the same directory as the model so "model_name_or_path" and "tokenizer_name_or_path" should be identical usually
+* "device": "cpu" or e.g. 'cuda:0'
+* "batch_size"
+* "num_beams": number of beams for the search
+* "num_ret_seq": number of sequences to return per input; needs to be smaller or equal to "num_beams"
+
+"test_args" are parameters for testing the model by generating the model predictions for a complete test data set. In case the sentence generation is integrated into another framework, they are not necessary. Instead, a RecipeGenerator object should be instantiated with the parameters of "generator_args" and then the arguments to the RecipeGenerator.generate method can be constructed at at a different place. 
+* "corpus_dir": path to corpus directory, relative to inference.py
+* "test_path": path to the file with the complete test data or to a folder with several files for testing; path is relative to "corpus_dir"
+* "context_len": number of previous sentences of the same document to preprend to the current input graph
+* "output_file": path to the outputfile where all generated sentences get written to
+
+When running the inference.py script, this generates one single file for all the model predictions even if "test_path" is a directory with several files. Additionally, a second file is created containing all reference sentences for the generated sentences in the same order. This file has the same name as the one with the predictions, but with '\_references' as suffix. 
