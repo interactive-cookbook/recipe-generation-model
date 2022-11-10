@@ -9,7 +9,7 @@ import argparse
 from dataset_reader import build_dataset
 
 
-# Taken from amrlib code
+# Taken from amrlib code: https://github.com/bjascob/amrlib/blob/master/amrlib/models/generate_t5/trainer.py
 class T2TDataCollator:
     def __call__(self, batch):
         input_ids = torch.stack([example['input_ids'] for example in batch])
@@ -18,6 +18,7 @@ class T2TDataCollator:
         attention_mask = torch.stack([example['attention_mask'] for example in batch])
         decoder_attention_mask = torch.stack([example['target_attention_mask'] for example in batch])
 
+        # keys need to match the keys the model expects in the forward method
         collated_data = {'input_ids': input_ids, 'attention_mask': attention_mask,
                          'labels': lm_labels, 'decoder_attention_mask': decoder_attention_mask}
 
@@ -25,6 +26,11 @@ class T2TDataCollator:
 
 
 def train_generation_model(config_file):
+    """
+    Reads the configuration file and starts the training
+    :param config_file: json file with the configurations for the training
+    :return:
+    """
     with open(config_file) as c:
         config_args = json.load(c)
 
@@ -36,7 +42,12 @@ def train_generation_model(config_file):
 
 
 def _run_training_loop(general_config: dict, train_config: TrainingArguments):
-
+    """
+    Runs the complete training of a T5 model
+    :param general_config: general configuration parameters
+    :param train_config: parameters for the Trainer
+    :return:
+    """
     print("---------- Loading Model and Tokenizer ----------")
     model_path = general_config['model_name_or_path']
     try:

@@ -155,4 +155,10 @@ if __name__=='__main__':
 
     #create_split_ara_corpus('../recipe-generation/training/tuning_data_sets/ara1_amr_graphs', 0.8, 0.1, 0.1)
 
-    create_split_full_amr_corpus('../amr_annotation_3.0')
+    #create_split_full_amr_corpus('../amr_annotation_3.0')
+
+    #create_split_ara_corpus('../recipe-generation/data/recipe_amrs_actions', 0.8, 0.1, 0.1)
+
+    create_split_ara_corpus('../recipe-generation/training/tuning_data_sets/ara2_amr_graphs', 0, 0, 1)
+
+    pass
