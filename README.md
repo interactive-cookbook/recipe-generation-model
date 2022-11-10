@@ -131,9 +131,9 @@ When running the inference.py script, this generates one single file for all the
 
 ## Automatic Evaluation
 
-The script (evaluation.py)[] contains functions to compute BLEU and chrF scores for the generated texts. 
+The script (evaluation.py)[https://github.com/interactive-cookbook/recipe-generation-model/blob/main/evaluation.py] contains functions to compute BLEU and chrF scores for the generated texts. 
 
-`python evaluation.py --input [path_input_file]`
+Running `python evaluation.py --input [path_input_file]` will compute both scores and print the output to the command line.
 
 The script assumes that the input file contains only the generated text and that there exists a file with the reference text in the same folder that has the same file name with the suffix '_reference'. <br>
 For example, if `--input` is `some_folder/output.txt` then there should also be a file `output_reference.txt` in `some_folder`
