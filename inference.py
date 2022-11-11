@@ -5,7 +5,7 @@ import torch
 from argparse import ArgumentParser
 from typing import List
 from transformers import T5ForConditionalGeneration, T5Tokenizer
-from dataset_reader import read_data_set
+from dataset_reader import read_data_set, remove_token_alignments
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
@@ -100,6 +100,12 @@ class RecipeGenerator:
             assert not g.startswith('# ::'), "AMR graphs include metadata. Please remove the metadata to get the correct" \
                                              "behavior of the model. "
 
+        if self.linearization == 'penman_wo_alignments':
+            converted_graphs = [remove_token_alignments(gr_str) for gr_str in graphs]
+            graphs = converted_graphs
+        elif self.linearization != 'penman':
+            raise NotImplemented
+
         contextualized_graphs = [f'{c} {self.sep_token} {g}' for (c, g) in zip(contexts, graphs)]
         generated_sentences = []
 
@@ -132,13 +138,13 @@ class RecipeGenerator:
 
 if __name__=='__main__':
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--config", required=True, help="path to the configuration file for generation")
-    args = parser.parse_args()
-    config_file = args.config
-    generate_data_set(config_file)
+    #parser = argparse.ArgumentParser()
+    #parser.add_argument("--config", required=True, help="path to the configuration file for generation")
+    #args = parser.parse_args()
+    #config_file = args.config
+    #generate_data_set(config_file)
 
     #generate_data_set('inference_configs/inference_debug.json')
     #generate_data_set('inference_configs/inference_t5_ms_amr_ara_no_context.json')
-    #generate_data_set('inference_configs/inference_t5_ara1_no_context.json')
+    generate_data_set('inference_configs/inference_t5_ara1_orig_no_context.json')
 
