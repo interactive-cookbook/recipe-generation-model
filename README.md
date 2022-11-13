@@ -23,7 +23,7 @@ The [pytorch library](https://pytorch.org/get-started/locally/)
 [Sentence Piece](https://github.com/google/sentencepiece#installation)
 * `pip install sentencepiece`
 
-For evaluation: [evaluate library](https://huggingface.co/docs/evaluate/index) from Huggingface:
+For evaluation: [evaluate library](https://huggingface.co/docs/evaluate/index) from Huggingface and the dependencies for the computed metrices:
 * `pip install evaluate`
 * `pip install sacrebleu`
 * `pip install rouge_score`
