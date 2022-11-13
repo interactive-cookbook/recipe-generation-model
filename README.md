@@ -23,11 +23,11 @@ The [pytorch library](https://pytorch.org/get-started/locally/)
 [Sentence Piece](https://github.com/google/sentencepiece#installation)
 * `pip install sentencepiece`
 
-[Evaluate library](https://huggingface.co/docs/evaluate/index) from Huggingface:
+For evaluation: [evaluate library](https://huggingface.co/docs/evaluate/index) from Huggingface:
 * `pip install evaluate`
-
-[Sacrebleu](https://github.com/mjpost/sacrebleu):
 * `pip install sacrebleu`
+* `pip install rouge_score`
+* `pip install git+https://github.com/google-research/bleurt.git`
 
 ## Data set preparation
 
