@@ -23,8 +23,8 @@ The [pytorch library](https://pytorch.org/get-started/locally/)
 [Sentence Piece](https://github.com/google/sentencepiece#installation)
 * `pip install sentencepiece`
 
-[Sacrebleu](https://github.com/mjpost/sacrebleu):
-* `pip install sacrebleu`
+[Evaluate library](https://huggingface.co/docs/evaluate/index) from Huggingface:
+* `pip install evaluate`
 
 ## Data set preparation
 
