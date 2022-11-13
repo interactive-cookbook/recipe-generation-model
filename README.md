@@ -26,6 +26,9 @@ The [pytorch library](https://pytorch.org/get-started/locally/)
 [Evaluate library](https://huggingface.co/docs/evaluate/index) from Huggingface:
 * `pip install evaluate`
 
+[Sacrebleu](https://github.com/mjpost/sacrebleu):
+* `pip install sacrebleu`
+
 ## Data set preparation
 
 
