@@ -5,6 +5,8 @@ This repository contains part of the code for the master thesis project of gener
 The generation model is the pretrained t5 model from huggingface which gets fine-tuned on amr-to-text generation. The code is based on and adapted from the scripts from the [amrlib library](https://github.com/bjascob/amrlib).
 
 ## Requirements 
+Tested with python 3.7 (and previously also with python 3.6 but huggingface evaluate library requires python 3.7).
+
 The [networkX library](https://networkx.org/documentation/stable/index.html) (really needed?):
 * `pip install networkx[default]`
 * `pip install graphviz`
