@@ -67,22 +67,29 @@ Example:
 }
 ```
 The key, value pairs in the scope of "gen_args" are needed to specify the following information:
-* "model_name_or_path": path to a the folder of a local model or name of a huggingface model of the type T5ForConditionalGeneration
-* "tokenizer_name_or_path": path to the folder containing a trained tokenizer or name of a huggingface tokenizer of type T5Tokenizer; optional, if not provided the same as "model_name_or_path" will be used for loading the tokenizer
-* "corpus_dir": path to corpus directory, relative to training.py
-* "train_path": path to the file with the complete training data or to a folder with several files for training; path is relative to "corpus_dir"
-* "valid_path": path to the file with the complete validation data or to a folder with several files for validation; path is relative to "corpus_dir"
-* "max_in_len": maximum input length; tokenizer will truncate longer input sequences
-* "max_out_len": maximum output length; tokenizer will truncate longer target sequences
-* "context_len": number of previous sentences of the same document to preprend to the current input graph
-* "linearization": type of linearization to use for the amr graph; currently only "penman" implemented
-* "sep_token": the special token that should be added between the current graph and the previous context; will be added as special token to the vocab of the tokenizer
+* **"model_name_or_path"**: path to a the folder of a local model or name of a huggingface model of the type T5ForConditionalGeneration
+* **"tokenizer_name_or_path"**: path to the folder containing a trained tokenizer or name of a huggingface tokenizer of type T5Tokenizer; optional, if not provided the same as "model_name_or_path" will be used for loading the tokenizer
+* **"corpus_dir"**: path to corpus directory, relative to training.py
+* **"train_path"**: path to the file with the complete training data or to a folder with several files for training; path is relative to "corpus_dir"
+* **"valid_path"**: path to the file with the complete validation data or to a folder with several files for validation; path is relative to "corpus_dir"
+* **"max_in_len"**: maximum input length; tokenizer will truncate longer input sequences
+* **"max_out_len"**: maximum output length; tokenizer will truncate longer target sequences
+* **"context_len"**: number of previous sentences of the same document to preprend to the current input graph
+* **"linearization"**: type of linearization to use for the amr graph; currently only "penman" implemented
+* **"sep_token"**: the special token that should be added between the current graph and the previous context; will be added as special token to the vocab of the tokenizer
 
+**"train_path"** / **"valid_path"**<br>
 If "train_path" / "valid_path" is a directory, then each file in the directory is treated as one document if context_len > 0. If "train_path" / "valid_path" is a file, then that file is treated as one single document if context_len > 0.
 
+**train_args**<br>
 The "train_args" dictionary will be converted into a TrainingArguments object and passed to the transformer [Trainer](https://huggingface.co/docs/transformers/main_classes/trainer#trainer). See the [TrainerArguments](https://huggingface.co/docs/transformers/main_classes/trainer#transformers.TrainingArguments) documentation for information about possible parameters and default values. 
 
-**Important:** do not change "remove_unused_columns" to true or the functions will not work any more (see [here](https://github.com/huggingface/transformers/issues/9520) for more information)
+**linearization**<br>
+Currently implemented are two options: 
+* 'penman': does not make any changes to the input format, i.e. is the same penmanr string representation as in the input files (without the metadata)
+* 'penman_wo_alignments': removes the node-to-token alignments from the amr string (i.e. removes all '~e.X' occurences where X is the aligned token ID)
+
+**Important:** do not change **"remove_unused_columns"** to true or the functions will not work any more (see [here](https://github.com/huggingface/transformers/issues/9520) for more information)
 
 **Note**: the transformer Trainer.train() function by default uses all availabel gpu nodes if "no_cuda": false is set. In order to restrict training to a single gpu run e.g. `CUDA_VISIBLE_DEVICES="3", python training.py --config [path_to_config_file]`
 
