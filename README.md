@@ -47,7 +47,10 @@ For evaluation: [evaluate library](https://huggingface.co/docs/evaluate/index) f
 
 where the config file should be a .json file including the configuration for the training following the format of the files in the [training_configs](https://github.com/interactive-cookbook/recipe-generation-model/tree/main/training_configs) folder. 
 
-Example: 
+Note that all logging information is only printed to the command line. In order to write the information into a file run <br>
+`python training.py --config [path_to_config_file] > path/log_file.txt`
+
+Example configuration file: 
 ```
 {"gen_args": {
     "model_name_or_path": "t5-base",
