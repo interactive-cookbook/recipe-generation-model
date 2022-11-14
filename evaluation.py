@@ -76,6 +76,7 @@ def run_eval(model_output_file):
     bleu = bleu_scorer.compute(predictions=generated_snts, references=ref_snts_input)
     sacrebleu = sacre_bleu_scorer.compute(predictions=generated_snts, references=ref_snts_input)
     chrf = chrf_scorer.compute(predictions=generated_snts, references=ref_snts_input)
+    chrf_plus = chrf_scorer.compute(predictions=generated_snts, references=ref_snts_input, word_order=2)
     rouge = rouge_scorer.compute(predictions=tokenized_generated_snts, references=tokenized_ref_snts)
     meteor = meteor_scorer.compute(predictions=tokenized_generated_snts, references=tokenized_ref_snts)
     bleurt = bleurt_scorer.compute(predictions=generated_snts, references=ref_snts)
@@ -84,6 +85,7 @@ def run_eval(model_output_file):
     print(f'BLEU Score: {bleu}')
     print(f'Sacrebleu score: {sacrebleu}')
     print(f'chrF Sacre Score: {chrf}')
+    print(f'chrF++ Sacre Score: {chrf_plus}')
     print(f'ROUGE score: {rouge}')
     print(f'METEOR score: {meteor}')
     print(f'BLEURT score: {bleurt}')
@@ -95,8 +97,9 @@ if __name__=='__main__':
     #parser.add_argument('--input', required=True)
     #args = parser.parse_args()
     #run_eval(args.input)
-
-    run_eval("./output/0_context/output_ms_amr_t5.txt")
+    #run_eval("./output/t5_amrlib/output_amrlib_amr3_0_test.txt")
+    #run_eval("./output/t5_amr/0_context/output_amr3_0_beam_1.txt")
+    run_eval("./output/t5_amr/0_context/output_ara1_split_beam_1_na.txt")
 
 
 

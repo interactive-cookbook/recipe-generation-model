@@ -4,6 +4,7 @@ from pathlib import Path
 import math
 import shutil
 from typing import List
+from argparse import ArgumentParser
 
 
 def create_split_full_amr_corpus(amr_corpus_dir):
@@ -151,6 +152,7 @@ def _split_doc_corpus(amr_corpus_dir, amr_doc_files, split_dir, train_per: float
 
 
 if __name__=='__main__':
+
     #create_split_ms_amr_corpus('../recipe-generation/training/tuning_data_sets/ms_amr_graphs', 0.8, 0.1, 0.1)
 
     #create_split_ara_corpus('../recipe-generation/training/tuning_data_sets/ara1_amr_graphs', 0.8, 0.1, 0.1)
@@ -159,6 +161,6 @@ if __name__=='__main__':
 
     #create_split_ara_corpus('../recipe-generation/data/recipe_amrs_actions', 0.8, 0.1, 0.1)
 
-    create_split_ara_corpus('../recipe-generation/training/tuning_data_sets/ara2_amr_graphs', 0, 0, 1)
+    create_split_ara_corpus('../recipe-generation/training/tuning_data_sets/ara1_amr_graphs', 0.8, 0.1, 0.1)
 
     pass
