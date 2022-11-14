@@ -31,6 +31,15 @@ For evaluation: [evaluate library](https://huggingface.co/docs/evaluate/index) f
 
 ## Data set preparation
 
+### LDC AMR 3.0 data set
+
+
+### LDC AMR 3.0 multi-sentence data set
+
+
+### ARA data set
+
+
 
 ## Run the training
 
@@ -136,16 +145,16 @@ Example
 * "corpus_dir": path to corpus directory, relative to inference.py
 * "test_path": path to the file with the complete test data or to a folder with several files for testing; path is relative to "corpus_dir"
 * "context_len": number of previous sentences of the same document to preprend to the current input graph
-* "output_file": path to the outputfile where all generated sentences get written to
+* "output_file": The name of the outputfile where all generated sentences get written to
 
-When running the inference.py script, this generates one single file for all the model predictions even if "test_path" is a directory with several files. Additionally, a second file is created containing all reference sentences for the generated sentences in the same order. This file has the same name as the one with the predictions, but with '\_references' as suffix. 
+When running the inference.py script, this generates one single file for all the model predictions even if "test_path" is a directory with several files. Additionally, a second file is created containing all reference sentences for the generated sentences in the same order. This file has the same name as the one with the predictions, but with '\_references' as suffix. The files with the references and the predictions get created in the folder `repo_dir/output/[model_name]/[context_len]_context` where `model_name` is derived from "model_name-or_path"
 
 
 ## Automatic Evaluation
 
-The script (evaluation.py)[https://github.com/interactive-cookbook/recipe-generation-model/blob/main/evaluation.py] contains functions to compute BLEU and chrF scores for the generated texts. 
+The script (evaluation.py)[https://github.com/interactive-cookbook/recipe-generation-model/blob/main/evaluation.py] contains functions to compute BLEU, chrF, ROUGE, METEOR and BLEURT scores for the generated texts. 
 
-Running `python evaluation.py --input [path_input_file]` will compute both scores and print the output to the command line.
+Running `python evaluation.py --input [path_input_file]` will compute all scores and print the output to the command line.
 
 The script assumes that the input file contains only the generated text and that there exists a file with the reference text in the same folder that has the same file name with the suffix '_reference'. <br>
 For example, if `--input` is `some_folder/output.txt` then there should also be a file `output_reference.txt` in `some_folder`
