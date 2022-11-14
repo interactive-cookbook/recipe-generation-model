@@ -64,17 +64,20 @@ Example:
     "train_args": {
       "output_dir": "./models/train_t5_ara1_amr/t5_ara1_amr",
       "do_train": true,
-      "do_eval": false,
+      "do_eval": true,
+      "evaluation_strategy": "epoch",
       "overwrite_output_dir": false,
       "prediction_loss_only": true,
       "num_train_epochs": 8,
-      "save_steps": 1000,
+      "save_steps": 20,
       "save_total_limit": 2,
       "per_device_train_batch_size": 1,
       "per_device_eval_batch_size": 1,
       "gradient_accumulation_steps": 24,
       "learning_rate": 1e-4,
       "seed": 42,
+      "log_level": "info",
+      "logging_strategy": "epoch",
       "remove_unused_columns": false,
       "no_cuda": false
   }
