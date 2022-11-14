@@ -109,6 +109,9 @@ Currently implemented are two options:
 * 'penman': does not make any changes to the input format, i.e. is the same penmanr string representation as in the input files (without the metadata)
 * 'penman_wo_alignments': removes the node-to-token alignments from the amr string (i.e. removes all '~e.X' occurences where X is the aligned token ID)
 
+**"max_in_len"/"max_out_len"**<br>
+If no limitation and truncation of the input / output sequence should happen, then set the corresponding value to 0. Sequences that get truncated are removed from the training data set, i.e. if an input sequence or an output sequences exceeds the maximum length, then that input/output pair is removed from the data set. 
+
 **Important:** do not change **"remove_unused_columns"** to true or the functions will not work any more (see [here](https://github.com/huggingface/transformers/issues/9520) for more information)
 
 **Note**: the transformer Trainer.train() function by default uses all availabel gpu nodes if "no_cuda": false is set. In order to restrict training to a single gpu run e.g. `CUDA_VISIBLE_DEVICES="3", python training.py --config [path_to_config_file]`
