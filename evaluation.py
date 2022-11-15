@@ -54,41 +54,72 @@ def run_eval(model_output_file):
 
     generated_snts = read_file_for_eval(generated_file)
     ref_snts = read_file_for_eval(gold_file)
-    ref_snts_input = [[r] for r in ref_snts]
-    tokenized_generated_snts = [' '.join(word_tokenize(s)) for s in generated_snts]
-    tokenized_ref_snts = [' '.join(word_tokenize(r)) for r in ref_snts]
 
     assert len(generated_snts) == len(ref_snts)
 
-    # https://huggingface.co/spaces/evaluate-metric/bleu
-    bleu_scorer= evaluate.load("bleu")
+
+    print(f'----- Evaluating {model_output_file} -----')
+    compute_bleu(predictions=generated_snts, references=ref_snts)
+    compute_chrf(predictions=generated_snts, references=ref_snts)
+    compute_chrf_plus(predictions=generated_snts, references=ref_snts)
+    compute_rouge(predictions=generated_snts, references=ref_snts)
+    compute_meteor(predictions=generated_snts, references=ref_snts)
+    compute_bleurt(predictions=generated_snts, references=ref_snts)
+
+
+def compute_bleu(predictions, references):
     # https://huggingface.co/spaces/evaluate-metric/sacrebleu
+    references = [[r] for r in references]
     sacre_bleu_scorer = evaluate.load("sacrebleu")
+    sacrebleu = sacre_bleu_scorer.compute(predictions=predictions, references=references)
+    print(f'BLEU Score: {sacrebleu}')
+    return sacrebleu
+
+
+def compute_chrf(predictions, references):
     # https://huggingface.co/spaces/evaluate-metric/chrf
+    references = [[r] for r in references]
     chrf_scorer = evaluate.load("chrf")
+    chrf = chrf_scorer.compute(predictions=predictions, references=references)
+    print(f'chrF Sacre Score: {chrf}')
+    return chrf
+
+
+def compute_chrf_plus(predictions, references):
+    # https://huggingface.co/spaces/evaluate-metric/chrf
+    references = [[r] for r in references]
+    chrf_scorer = evaluate.load("chrf")
+    chrf_plus = chrf_scorer.compute(predictions=predictions, references=references, word_order=2)
+    print(f'chrF++ Sacre Score: {chrf_plus}')
+    return chrf_plus
+
+
+def compute_rouge(predictions, references):
     # https://huggingface.co/spaces/evaluate-metric/rouge
+    predictions = [' '.join(word_tokenize(s)) for s in predictions]
+    references = [' '.join(word_tokenize(r)) for r in references]
     rouge_scorer = evaluate.load("rouge")
+    rouge = rouge_scorer.compute(predictions=predictions, references=references)
+    print(f'ROUGE score: {rouge}')
+    return rouge
+
+
+def compute_meteor(predictions, references):
     # https://huggingface.co/spaces/evaluate-metric/meteor
+    predictions = [' '.join(word_tokenize(s)) for s in predictions]
+    references = [' '.join(word_tokenize(r)) for r in references]
     meteor_scorer = evaluate.load("meteor")
+    meteor = meteor_scorer.compute(predictions=predictions, references=references)
+    print(f'METEOR score: {meteor}')
+    return meteor
+
+
+def compute_bleurt(predictions, references):
     # https://huggingface.co/spaces/evaluate-metric/bleurt
     bleurt_scorer = evaluate.load("bleurt", module_type="metric")
-
-    bleu = bleu_scorer.compute(predictions=generated_snts, references=ref_snts_input)
-    sacrebleu = sacre_bleu_scorer.compute(predictions=generated_snts, references=ref_snts_input)
-    chrf = chrf_scorer.compute(predictions=generated_snts, references=ref_snts_input)
-    chrf_plus = chrf_scorer.compute(predictions=generated_snts, references=ref_snts_input, word_order=2)
-    rouge = rouge_scorer.compute(predictions=tokenized_generated_snts, references=tokenized_ref_snts)
-    meteor = meteor_scorer.compute(predictions=tokenized_generated_snts, references=tokenized_ref_snts)
-    bleurt = bleurt_scorer.compute(predictions=generated_snts, references=ref_snts)
-
-    print(f'----- Evaluated {model_output_file} -----')
-    print(f'BLEU Score: {bleu}')
-    print(f'Sacrebleu score: {sacrebleu}')
-    print(f'chrF Sacre Score: {chrf}')
-    print(f'chrF++ Sacre Score: {chrf_plus}')
-    print(f'ROUGE score: {rouge}')
-    print(f'METEOR score: {meteor}')
+    bleurt = bleurt_scorer.compute(predictions=predictions, references=references)
     print(f'BLEURT score: {bleurt}')
+    return bleurt
 
 
 if __name__=='__main__':
