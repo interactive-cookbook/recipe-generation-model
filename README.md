@@ -5,13 +5,13 @@ This repository contains part of the code for the master thesis project of gener
 The generation model is the pretrained t5 model from huggingface which gets fine-tuned on amr-to-text generation. The code is based on and adapted from the scripts from the [amrlib library](https://github.com/bjascob/amrlib).
 
 ## Requirements 
-Tested with python 3.7 (and previously also with python 3.6 but huggingface evaluate library requires python 3.7).
+Tested with python 3.7 (and previously also with python 3.6 but huggingface evaluate library requires python 3.7) and the library versions listed in brackets below.
 
-The [networkX library](https://networkx.org/documentation/stable/index.html) (really needed?):
+The [networkX library](https://networkx.org/documentation/stable/index.html) (really needed?) (2.6.3):
 * `pip install networkx[default]`
 * `pip install graphviz`
 
-The [penman library](https://github.com/goodmami/penman/) (really needed?):
+The [penman library](https://github.com/goodmami/penman/) (really needed?) (1.2.2):
 * `pip install penman`
 
 The [pytorch library](https://pytorch.org/get-started/locally/)
@@ -20,14 +20,17 @@ The [pytorch library](https://pytorch.org/get-started/locally/)
 * `pip install transformers` (resulted in an error for me on Windows 10, python 3.6 anaconda environment)
 * `conda install -c huggingface transformers` (was successful)
 
-[Sentence Piece](https://github.com/google/sentencepiece#installation)
+[Sentence Piece](https://github.com/google/sentencepiece#installation) (0.1.97)
 * `pip install sentencepiece`
 
-For evaluation: [evaluate library](https://huggingface.co/docs/evaluate/index) from Huggingface and the dependencies for the computed metrices:
-* `pip install evaluate`
-* `pip install sacrebleu`
-* `pip install rouge_score`
-* `pip install git+https://github.com/google-research/bleurt.git`
+For evaluation: [evaluate library](https://huggingface.co/docs/evaluate/index) from Huggingface and the dependencies for the computed metrices (0.3.0):
+* `pip install evaluate` (0.0.2)
+* `pip install sacrebleu` (2.3.1)
+* `pip install rouge_score` (0.1.2)
+* `pip install git+https://github.com/google-research/bleurt.git` (0.0.2)
+
+nltk (3.7)
+* `pip install nltk`
 
 ## Data set preparation
 
