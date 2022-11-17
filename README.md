@@ -48,10 +48,11 @@ run the `create_split_full_amr_corpus(amr_corpus_dir)` function with the path to
 
 ### LDC AMR 3.0 multi-sentence data set
 
-run the `create_split_ms_corpus(amr_corpus_dir, train_per, val_per, test_per)` function 
+run the `create_split_ms_corpus(amr_corpus_dir, train_per, val_per, test_per)` function where `amr_corpus_dir` is the path to a folder containing one file per document for which ms-amr annotations exist, each containing all AMRs (empty line separated) for that document in their original order. This will create three folders 'train', 'val' and 'test' in the './data' directory, such that the train folder will contain train_per\*100 percent of the available files, the val folder will contain val\*100 percent of the files and the test folder the rest. The files are randomly assigned to the splits.
 
 ### ARA data set
 
+run the `create_split_ara_corpus(amr_corpus, train_per, val_per, test_per)` function where `amr_corpus` is the path a main ara corpus folder, i.e. the folder containing one subfolder per dish with one amr file per recipe. This will create three folders 'train', 'val' and 'test' in the './data' directory, such that the train folder will contain train_per\*100 percent of the available files, the val folder will contain val\*100 percent of the files and the test folder the rest. The files are randomly assigned to the splits.
 
 
 ## Run the training
