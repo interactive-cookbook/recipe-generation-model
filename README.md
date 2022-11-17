@@ -40,11 +40,15 @@ The data sets for training and evaluating the generation models should follow th
 All AMRs are separated from each other by an empty line and in addition to the AMRs, there can be one line at the top of the file starting with '# AMR release' which will be skipped. <br>
 Each AMR should at least consist of the metadata '# ::snt' and then the AMR graph in penman notation. All other potentially included metadata information will be ignored and if the penman representation contains token alignments they can be kept or removed by choosing the corresponding linearization during the training process (see below). 
 
+The functions in the `create_data_splits.py` script can be used to create train, dev and test splits from the complete AMR 3.0 dataset, the multi-sentence subset of AMR 3.0 and from the Ara corpus.
+
 ### LDC AMR 3.0 data set
 
+run the `create_split_full_amr_corpus(amr_corpus_dir)` function with the path to the parent AMR 3.0 folder in order to create a folder `data/amr3_0` in the main repo directory containing a train.txt, valid.txt and test.txt file with the official train-valid-test split of the corpus.
 
 ### LDC AMR 3.0 multi-sentence data set
 
+run the `create_split_ms_corpus(amr_corpus_dir, train_per, val_per, test_per)` function 
 
 ### ARA data set
 
