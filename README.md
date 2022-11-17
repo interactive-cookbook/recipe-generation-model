@@ -34,6 +34,8 @@ nltk (3.7)
 
 ## Data set preparation
 
+### Data set format
+
 ### LDC AMR 3.0 data set
 
 
@@ -140,7 +142,7 @@ Example
     "corpus_dir": "./data/ara1_amrs",
     "test_path": "test",
     "context_len": 0,
-    "output_file": "./output/output_amrlib_t5.txt"
+    "output_file": "output_amrlib_t5.txt"
   }
 }
 ```
@@ -170,3 +172,10 @@ Running `python evaluation.py --input [path_input_file]` will compute all scores
 
 The script assumes that the input file contains only the generated text and that there exists a file with the reference text in the same folder that has the same file name with the suffix '_reference'. <br>
 For example, if `--input` is `some_folder/output.txt` then there should also be a file `output_reference.txt` in `some_folder`
+
+
+## Running Inference plus evaluation
+
+The script `predict_and_evaluate.py ` can be used to generate text using a trained model, directly evaluate the model and save the results into a file. 
+
+To do so, run the `pred_and_eval(inference_config_file)` function with the path to an inference configuration .json file as argument. This will generate the texts as specified in the configuration file and save the predicted and reference, then compute all evaluation metrices and save the output to a file with the same name as the file with the predicted texts plus the suffix '\_evaluation' in the same folder.
