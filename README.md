@@ -36,6 +36,10 @@ nltk (3.7)
 
 ### Data set format
 
+The data sets for training and evaluating the generation models should follow the format of the official LDC AMR data sets: <br>
+All AMRs are separated from each other by an empty line and in addition to the AMRs, there can be one line at the top of the file starting with '# AMR release' which will be skipped. <br>
+Each AMR should at least consist of the metadata '# ::snt' and then the AMR graph in penman notation. All other potentially included metadata information will be ignored and if the penman representation contains token alignments they can be kept or removed by choosing the corresponding linearization during the training process (see below). 
+
 ### LDC AMR 3.0 data set
 
 
