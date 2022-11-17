@@ -40,6 +40,33 @@ The data sets for training and evaluating the generation models should follow th
 All AMRs are separated from each other by an empty line and in addition to the AMRs, there can be one line at the top of the file starting with '# AMR release' which will be skipped. <br>
 Each AMR should at least consist of the metadata '# ::snt' and then the AMR graph in penman notation. All other potentially included metadata information will be ignored and if the penman representation contains token alignments they can be kept or removed by choosing the corresponding linearization during the training process (see below). 
 
+Example file:
+```
+# ::id waffles_0_instr0
+# ::snt Beat eggs .
+(b / beat-01~e.1
+   :mode imperative~e.3
+   :ARG0 (y / you~e.1)
+   :ARG1 (e / egg~e.2))
+
+# ::id waffles_0_instr1
+# ::snt Mix in remaining ingredients .
+(m / mix-01~e.4
+   :mode imperative~e.8
+   :ARG0 (y / you~e.4)
+   :ARG1 (i / ingredient~e.7
+            :ARG1-of (r / remain-01~e.6)))
+
+# ::id waffles_0_instr2
+# ::snt Cook on hot waffle iron .
+(c / cook-01~e.9
+   :mode imperative~e.9
+   :ARG0 (y / you~e.9)
+   :instrument (i / iron~e.13
+                  :mod (w / waffle~e.12)
+                  :ARG1-of (h / hot-05~e.11)))
+```
+
 The functions in the `create_data_splits.py` script can be used to create train, dev and test splits from the complete AMR 3.0 dataset, the multi-sentence subset of AMR 3.0 and from the Ara corpus.
 
 ### LDC AMR 3.0 data set
