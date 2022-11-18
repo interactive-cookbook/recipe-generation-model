@@ -22,9 +22,8 @@ The [penman library](https://github.com/goodmami/penman/) (really needed?) (1.2.
 
 The [pytorch library](https://pytorch.org/get-started/locally/)
 
-[Transformers](https://huggingface.co/docs/transformers/installation#install-with-conda) from Huggingface:
-* `pip install transformers` (resulted in an error for me on Windows 10, python 3.6 anaconda environment)
-* `conda install -c huggingface transformers` (was successful)
+[Transformers](https://huggingface.co/docs/transformers/installation#install-with-conda) from Huggingface (version 3 will probably not work) (4.24.0):
+* `conda install -c huggingface transformers` 
 
 [Sentence Piece](https://github.com/google/sentencepiece#installation) (0.1.97)
 * `pip install sentencepiece`
