@@ -108,18 +108,18 @@ def create_recipe2split_assignment(amr_corpus_dir, split_name, train_per=0.8, va
     for dish in os.listdir(amr_corpus_dir):
         dish_dir = os.path.join(Path(amr_corpus_dir), dish)
         for recipe in os.listdir(dish_dir):
-            recipe_path = os.path.join(dish_dir, recipe)
+            recipe_path = os.path.join(dish, recipe)
             recipes_amr_files.append(recipe_path)
 
     train_files, val_files, test_files = assign_recipe2split(recipes_amr_files, train_per, val_per)
-
-    with open(os.path.join('./data_splits/', split_name, '.tsv'), 'w', encoding='utf-8') as f:
+    Path('./data_splits').mkdir(exist_ok=True, parents=True)
+    with open(os.path.join('./data_splits/', split_name + '.tsv'), 'w', encoding='utf-8') as f:
         for train_recipe in train_files:
             f.write(f'train\t{train_recipe}\n')
         for val_recipe in val_files:
             f.write(f'val\t{val_recipe}\n')
         for test_recipe in test_files:
-            f.write(f'test\t{test_recipe}')
+            f.write(f'test\t{test_recipe}\n')
 
 
 def create_split_files_from_assignment(assignment_file, corpus_dir, split_dir):
@@ -138,29 +138,37 @@ def create_split_files_from_assignment(assignment_file, corpus_dir, split_dir):
     test_files = []
 
     with open(assignment_file, 'r', encoding='utf-8') as a_f:
-        for line in a_f.read():
-            split, file_name = line.strip().split('\t')
-            if split == 'train':
-                train_files.append(file_name)
-            elif split == 'val':
-                val_files.append(file_name)
-            else:
-                test_files.append(file_name)
+        for line in a_f.readlines():
+            if line:
+                split, file_name = line.strip().split('\t')
+                if split == 'train':
+                    train_files.append(file_name)
+                elif split == 'val':
+                    val_files.append(file_name)
+                else:
+                    test_files.append(file_name)
 
-    create_split_files(corpus_dir, split_dir, train_files, val_files, test_files)
+    create_split_files(Path(corpus_dir), split_dir, train_files, val_files, test_files)
 
 
 
 if __name__=='__main__':
+    """
+    create_recipe2split_assignment('../recipe-generation/training/tuning_data_sets/ara1_amr_graphs',
+                                   'ara1_data_split')
+    create_recipe2split_assignment('../recipe-generation/training/tuning_data_sets/ara2_amr_graphs',
+                                   'ara2_data_split')
+    """
 
-    #create_split_ms_amr_corpus('../recipe-generation/training/tuning_data_sets/ms_amr_graphs', 0.8, 0.1, 0.1)
-
-    #create_split_ara_corpus('../recipe-generation/training/tuning_data_sets/ara1_amr_graphs', 0.8, 0.1, 0.1)
-
-    #create_split_full_amr_corpus('../amr_annotation_3.0')
-
-    #create_split_ara_corpus('../recipe-generation/data/recipe_amrs_actions', 0.8, 0.1, 0.1)
-
-    create_random_split_ara_corpus('../recipe-generation/training/tuning_data_sets/ara2_amr_graphs', 0.8, 0.1, 0.1)
-
-    pass
+    create_split_files_from_assignment('./data_splits/ara1_data_split.tsv',
+                                       '../recipe-generation/training/tuning_data_sets/ara1_amr_graphs',
+                                       './data/ara1_amrs')
+    create_split_files_from_assignment('./data_splits/ara2_data_split.tsv',
+                                       '../recipe-generation/training/tuning_data_sets/ara2_amr_graphs',
+                                       './data/ara2_amrs')
+    create_split_files_from_assignment('./data_splits/ara1_data_split.tsv',
+                                       '../recipe-generation/training/tuning_data_sets/ara1_amr_graphs',
+                                       './data/ara1_2_amrs')
+    create_split_files_from_assignment('./data_splits/ara2_data_split.tsv',
+                                       '../recipe-generation/training/tuning_data_sets/ara2_amr_graphs',
+                                       './data/ara1_2_amrs')
