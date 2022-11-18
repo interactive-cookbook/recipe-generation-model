@@ -71,15 +71,26 @@ The functions in the `create_data_splits.py` script can be used to create train,
 
 ### LDC AMR 3.0 data set
 
-run the `create_split_full_amr_corpus(amr_corpus_dir)` function with the path to the parent AMR 3.0 folder in order to create a folder `data/amr3_0` in the main repo directory containing a train.txt, valid.txt and test.txt file with the official train-valid-test split of the corpus.
+Run the `create_split_full_amr_corpus(amr_corpus_dir)` function with the path to the parent AMR 3.0 folder in order to create a folder `data/amr3_0` in the main repo directory containing a train.txt, valid.txt and test.txt file with the official train-valid-test split of the corpus.
 
 ### LDC AMR 3.0 multi-sentence data set
 
-run the `create_split_ms_corpus(amr_corpus_dir, train_per, val_per, test_per)` function where `amr_corpus_dir` is the path to a folder containing one file per document for which ms-amr annotations exist, each containing all AMRs (empty line separated) for that document in their original order. This will create three folders 'train', 'val' and 'test' in the './data' directory, such that the train folder will contain train_per\*100 percent of the available files, the val folder will contain val\*100 percent of the files and the test folder the rest. The files are randomly assigned to the splits.
+Run the `create_split_ms_corpus(amr_corpus_dir, train_per, val_per, test_per)` function where `amr_corpus_dir` is the path to a folder containing one file per document for which ms-amr annotations exist, each containing all AMRs (empty line separated) for that document in their original order. This will create three folders 'train', 'val' and 'test' in the './data' directory, such that the train folder will contain train_per\*100 percent of the available files, the val folder will contain val\*100 percent of the files and the test folder the rest. The files are randomly assigned to the splits.
 
 ### ARA data set
 
-run the `create_split_ara_corpus(amr_corpus, train_per, val_per, test_per)` function where `amr_corpus` is the path a main ara corpus folder, i.e. the folder containing one subfolder per dish with one amr file per recipe. This will create three folders 'train', 'val' and 'test' in the './data' directory, such that the train folder will contain train_per\*100 percent of the available files, the val folder will contain val\*100 percent of the files and the test folder the rest. The files are randomly assigned to the splits.
+**Random Splits**<br>
+Run the `create_split_ara_corpus(amr_corpus, train_per, val_per, test_per)` function where `amr_corpus` is the path a main ara corpus folder, i.e. the folder containing one subfolder per dish with one amr file per recipe. This will create three folders 'train', 'val' and 'test' in the './data' directory, such that the train folder will contain train_per\*100 percent of the available files, the val folder will contain val\*100 percent of the files and the test folder the rest. The files are randomly assigned to the splits.
+
+**Reproducible Splits**<br>
+In order to assign each recipe file to a dataset split and additionally save the information about the assignment into a file first run `create_recipe2split_assignment(amr_corpus_dir, split_name, train_per, val_per, test_per)`. This will randomly assign the recipe files from amr_corpus_dir to the train, val and test split according to the specified split proportions. The function does not create these splits, but only saves the assingments into a file './data_splits/[split_name]' with the following format: 
+```
+train \t waffles/waffles_0.conllu
+val \t baked_ziti/baked-ziti_2.conllu
+...
+```
+
+The actual data set splits can then be created by running the function `create_split_files_from_assignment(assignment_file, corpus_dir, split_dir)` which will copy the files listed in `assignment_file` (paths need to be relative to `corpus_dir`) from `corpus_dir` to the appropriate subdirectory of `split_dir`, i.e. train, val or test directory.
 
 
 ## Run the training
