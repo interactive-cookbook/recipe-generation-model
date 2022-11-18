@@ -20,7 +20,7 @@ The [networkX library](https://networkx.org/documentation/stable/index.html) (re
 The [penman library](https://github.com/goodmami/penman/) (really needed?) (1.2.2):
 * `pip install penman`
 
-The [pytorch library](https://pytorch.org/get-started/locally/)
+The [pytorch library](https://pytorch.org/get-started/locally/) (1.12.1)
 
 [Transformers](https://huggingface.co/docs/transformers/installation#install-with-conda) from Huggingface (version 3 will probably not work) (4.24.0):
 * `conda install -c huggingface transformers` 
