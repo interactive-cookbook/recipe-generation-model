@@ -1,0 +1,17 @@
+{
+  "generator_args": {
+    "model_name_or_path": "./models/t5_amrlib_ara1_split_1",
+    "tokenizer_name_or_path": "./models/t5_amrlib_ara1_split_1",
+    "device": "cpu",
+    "batch_size": 4,
+    "num_beams": 4,
+    "num_ret_seq": 1
+  },
+  "test_args": {
+    "corpus_dir": "./data/ara1_amrs",
+    "test_path": "test",
+    "context_len": 1,
+    "output_file": "output_ara1_split_beam_4.txt",
+    "linearization": "penman"
+  }
+}

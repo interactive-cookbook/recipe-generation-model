@@ -1,0 +1,33 @@
+{"gen_args": {
+    "model_name_or_path": "./models/t5_amrlib",
+    "tokenizer_name_or_path": "t5-base",
+    "corpus_dir": "./data/ara1_amrs",
+    "train_path": "train",
+    "valid_path": "val",
+    "max_in_len": 0,
+    "max_out_len": 0,
+    "context_len": 3,
+    "linearization": "penman",
+    "sep_token": "<GRAPH>"
+  },
+    "train_args": {
+      "output_dir": "./models/t5_amrlib_ara1_split_3",
+      "do_train": true,
+      "do_eval": true,
+      "evaluation_strategy": "epoch",
+      "overwrite_output_dir": false,
+      "prediction_loss_only": true,
+      "num_train_epochs": 5,
+      "save_steps": 20,
+      "save_total_limit": 2,
+      "per_device_train_batch_size": 1,
+      "per_device_eval_batch_size": 1,
+      "gradient_accumulation_steps": 24,
+      "learning_rate": 1e-4,
+      "seed": 42,
+      "log_level": "info",
+      "logging_strategy": "epoch",
+      "remove_unused_columns": false,
+      "no_cuda": false
+  }
+}
