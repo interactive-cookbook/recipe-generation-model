@@ -2,7 +2,13 @@
 
 This repository contains part of the code for the master thesis project of generating new recipe texts based on information from two recipes for the same dish. In particular, this repository contains the code to train a text generation model that generates a sentence based on the corresponding amr representation and the n previously generated sentences. 
 
-The generation model is the pretrained t5 model from huggingface which gets fine-tuned on amr-to-text generation. The code is based on and adapted from the scripts from the [amrlib library](https://github.com/bjascob/amrlib).
+The generation model is a pretrained T5 model from huggingface which gets fine-tuned on amr-to-text generation. The code is based on and adapted from the scripts from the [amrlib library](https://github.com/bjascob/amrlib).
+
+The Readme contains information about
+* [Preparing data sets](https://github.com/interactive-cookbook/recipe-generation-model#data-set-preparation)
+* [Training the model](https://github.com/interactive-cookbook/recipe-generation-model#run-the-training)
+* [Generating texts](https://github.com/interactive-cookbook/recipe-generation-model#run-prediction)
+* and [evaluating](https://github.com/interactive-cookbook/recipe-generation-model#automatic-evaluation) the generated texts
 
 ## Requirements 
 Tested with python 3.7 (and previously also with python 3.6 but huggingface evaluate library requires python 3.7) and the library versions listed in brackets below.
