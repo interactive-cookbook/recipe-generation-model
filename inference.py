@@ -2,7 +2,7 @@ import os
 import json
 import torch
 from argparse import ArgumentParser
-from typing import List
+from typing import List, Tuple
 from pathlib import Path
 from transformers import T5ForConditionalGeneration, T5Tokenizer
 from dataset_reader import read_data_set, remove_token_alignments
@@ -48,7 +48,7 @@ def _run_inference(inference_config:dict, generator_config: dict):
     contexts = test_data_entries['context']
 
     print("---------- Starting generation ---------")
-    generated_text = generation_model.generate(contexts, graphs)
+    generated_text, _ = generation_model.generate(contexts, graphs)
     print("---------- Finished generation ---------")
 
     print("---------- Save output ----------")
@@ -90,7 +90,7 @@ class RecipeGenerator:
                                                self.model.config.task_specific_params[self.task].get('linearization', 'penman'))
         self.sep_token = self.model.config.task_specific_params[self.task].get('sep_token', '')
 
-    def generate(self, contexts: List[str], graphs: List[str]) -> List[str]:
+    def generate(self, contexts: List[str], graphs: List[str]) -> Tuple[List[str], List[bool]]:
         """
         Generates sentences for context-graph input sequences using self.model and self.tokenizer
         graphs should be a list of penman graph strings without metadata, line breaks or indentation
@@ -101,6 +101,8 @@ class RecipeGenerator:
         :param contexts: a list of contexts
         :param graphs: a list of graphs
         :return: the list of sentences generated from the graphs and previous context
+                 list of bools, indicating for each sentence at same index in the list of generated sentences,
+                 whether the input got truncated
         """
         # some assertions to identify problem with the input beforehand
         assert isinstance(graphs, list)
@@ -120,6 +122,7 @@ class RecipeGenerator:
         generated_sentences = []
 
         dataloader = DataLoader(contextualized_graphs, batch_size=self.batch_size)
+        clipped = []
         for batch in tqdm(dataloader):
             input_str = ['%s' % c_gr for c_gr in batch]
             # encode input
@@ -129,14 +132,12 @@ class RecipeGenerator:
                                                                    truncation=True,
                                                                    max_length=self.max_in_len,
                                                                    return_overflowing_tokens=True)
-                indices_to_remove = set()
+
                 for ind, trunc in enumerate(input_encodings['num_truncated_tokens']):
                     if trunc > 0:
-                        indices_to_remove.add(ind)
-                input_encodings['input_ids'] = [ie for ind, ie in enumerate(input_encodings['input_ids']) if
-                                                ind not in indices_to_remove]
-                input_encodings['attention_mask'] = [ie for ind, ie in enumerate(input_encodings['attention_mask']) if
-                                                     ind not in indices_to_remove]
+                        clipped.append(True)
+                    else:
+                        clipped.append(False)
 
             else:
                 input_encodings = self.tokenizer.batch_encode_plus(input_str, padding=True)
@@ -163,7 +164,7 @@ class RecipeGenerator:
             decoded_output = [self.tokenizer.decode(out_ids, skip_special_tokens=True) for out_ids in output]
             generated_sentences.extend(decoded_output)
 
-        return generated_sentences
+        return generated_sentences, clipped
 
 
 if __name__=='__main__':
