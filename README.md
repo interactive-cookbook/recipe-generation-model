@@ -152,7 +152,7 @@ The key, value pairs in the scope of "gen_args" are needed to specify the follow
 * **"max_in_len"**: maximum input length; tokenizer will truncate longer input sequences
 * **"max_out_len"**: maximum output length; tokenizer will truncate longer target sequences
 * **"context_len"**: number of previous sentences of the same document to preprend to the current input graph
-* **"linearization"**: type of linearization to use for the amr graph; currently only "penman" implemented
+* **"linearization"**: type of linearization to use for the amr graph; 
 * **"sep_token"**: the special token that should be added between the current graph and the previous context; will be added as special token to the vocab of the tokenizer
 
 **"train_path"** / **"valid_path"**<br>
@@ -191,6 +191,7 @@ Example
     "num_ret_seq": 1,
     "max_in_len": 1024,
     "max_out_len": 1024,
+    "linearization": "penman"
   },
   "test_args": {
     "corpus_dir": "./data/ara1_amrs",
@@ -210,6 +211,7 @@ Example
 * **"num_ret_seq"**: number of sequences to return per input; needs to be smaller or equal to "num_beams"
 * **"max_in_len"**: maximum input length; tokenizer will truncate longer input sequences
 * **"max_out_len"**: maximum output length; tokenizer will truncate longer target sequences
+* **"linearization"**: type of linearization to use (see explanation of training config above for the available options); optional, if not provided then the linearization used for training the model gets used
 
 **"max_in_len"/"max_out_len"**<br>
 If not specified in the inference configuration file then both get by default set to 1024. If no limitation and truncation of the input / output sequence should happen, then set the corresponding value to 0. But please note that setting "max_out_len" to 0 will have a negative impact on the inference results. 
