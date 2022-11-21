@@ -21,7 +21,8 @@ def generate_data_set(config_file):
 
     torch.cuda.empty_cache()
 
-    _run_inference(config_args['test_args'], config_args['generator_args'])
+    model = _run_inference(config_args['test_args'], config_args['generator_args'])
+    return model
 
 
 def _run_inference(inference_config:dict, generator_config: dict):
@@ -65,6 +66,8 @@ def _run_inference(inference_config:dict, generator_config: dict):
             f.write(f'{ref_snt}\n')
     print(f'Output files were saved to {output_path}')
 
+    return generation_model
+
 
 # Based on amrlib code: https://github.com/bjascob/amrlib/blob/master/amrlib/models/generate_t5/inference.py
 class RecipeGenerator:
@@ -74,18 +77,17 @@ class RecipeGenerator:
     """
     def __init__(self, configuration: dict):
         self.task = 'translation_cond_amr_to_text'
-        #self.task = 'translation_amr_to_text'
         self.model = T5ForConditionalGeneration.from_pretrained(configuration['model_name_or_path'])
         self.tokenizer = T5Tokenizer.from_pretrained(configuration['tokenizer_name_or_path'])
-        self.max_in_len = self.model.config.task_specific_params[self.task]['max_in_len']
-        self.max_out_len = self.model.config.task_specific_params[self.task]['max_out_len']
+        self.max_in_len = configuration.get('max_in_len', 1024)
+        self.max_out_len = configuration.get('max_out_len', 1024)
 
         self.device = configuration['device'] if torch.cuda.is_available() else 'cpu'
         self.batch_size = configuration.get('batch_size', 1)
         self.num_beams = configuration.get('num_beams', 1)
         self.num_ret_seq = configuration.get('num_ret_seq', 1)
-        self.linearization = 'penman_wo_alignments'
-        #self.linearization = self.model.config.task_specific_params[self.task].get('linearization', 'penman')
+        self.linearization = configuration.get('linearization',
+                                               self.model.config.task_specific_params[self.task].get('linearization', 'penman'))
         self.sep_token = self.model.config.task_specific_params[self.task].get('sep_token', '')
 
     def generate(self, contexts: List[str], graphs: List[str]) -> List[str]:
@@ -166,13 +168,11 @@ class RecipeGenerator:
 
 if __name__=='__main__':
 
-    #parser = argparse.ArgumentParser()
-    #parser.add_argument("--config", required=True, help="path to the configuration file for generation")
-    #args = parser.parse_args()
-    #config_file = args.config
-    #generate_data_set(config_file)
+    parser = ArgumentParser()
+    parser.add_argument("--config", required=True, help="path to the configuration file for generation")
+    args = parser.parse_args()
+    config_file = args.config
+    generate_data_set(config_file)
 
-    #generate_data_set('inference_configs/inference_debug.json')
-    #generate_data_set('inference_configs/inference_t5_ms_amr_ara_no_context.json')
-    generate_data_set('inference_configs/inference_t5_ara1_split.json')
+
 
