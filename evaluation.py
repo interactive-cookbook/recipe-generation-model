@@ -2,7 +2,8 @@ import os
 from typing import List
 from nltk.tokenize import word_tokenize
 import evaluate
-from argparse import ArgumentParser
+from statistics import mean
+import argparse
 
 
 # amrlib uses nltk.translated.bleu_score.corpus_bleu
@@ -116,21 +117,22 @@ def compute_meteor(predictions, references):
 
 def compute_bleurt(predictions, references):
     # https://huggingface.co/spaces/evaluate-metric/bleurt
-    bleurt_scorer = evaluate.load("bleurt", module_type="metric")
+    bleurt_scorer = evaluate.load("bleurt", "bleurt-large-512", module_type="metric")
     bleurt = bleurt_scorer.compute(predictions=predictions, references=references)
+    bleurt['average'] = mean(bleurt['scores'])
     print(f'BLEURT score: {bleurt}')
     return bleurt
 
 
 if __name__=='__main__':
 
-    #parser = argparse.ArgumentParser()
-    #parser.add_argument('--input', required=True)
-    #args = parser.parse_args()
-    #run_eval(args.input)
-    #run_eval("./output/t5_amrlib/output_amrlib_amr3_0_test.txt")
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--input', required=True)
+    args = parser.parse_args()
+    run_eval(args.input)
+    #run_eval("./test_output/validation_ara1_2_split.txt")
     #run_eval("./output/t5_amr/0_context/output_amr3_0_beam_1.txt")
-    run_eval("./output/t5_amr/0_context/output_ara1_split_beam_1_na.txt")
+    #run_eval("./output/t5_amr/0_context/output_ara1_split_beam_1_na.txt")
 
 
 
