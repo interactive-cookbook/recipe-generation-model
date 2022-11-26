@@ -67,6 +67,13 @@ def _run_training_loop(general_config: dict, train_config: TrainingArguments):
     # These get saved together with the model in a config.json file to store them
     model.config.task_specific_params = {'translation_cond_amr_to_text': general_config}
 
+    # Change dropout rate if provided
+    try:
+        drop_out = general_config['dropout_rate']
+        model.config.dropout_rate = drop_out
+    except KeyError:
+        pass
+
     print("---------- Reading the Data ----------")
     train_data_path = os.path.join(general_config['corpus_dir'], general_config['train_path'])
     valid_data_path = os.path.join(general_config['corpus_dir'], general_config['valid_path'])
