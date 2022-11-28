@@ -119,7 +119,8 @@ Example configuration file:
     "max_out_len": 1024,
     "context_len": 1,
     "linearization": "penman",
-    "sep_token": "<GRAPH>"
+    "sep_token": "<GRAPH>",
+    "dropout_rate": 0.1
   },
     "train_args": {
       "output_dir": "./models/train_t5_ara1_amr/t5_ara1_amr",
@@ -154,6 +155,7 @@ The key, value pairs in the scope of "gen_args" are needed to specify the follow
 * **"context_len"**: number of previous sentences of the same document to preprend to the current input graph
 * **"linearization"**: type of linearization to use for the amr graph; 
 * **"sep_token"**: the special token that should be added between the current graph and the previous context; will be added as special token to the vocab of the tokenizer
+* **"dropout_rate"**: the dropout rate to use; optional, defaults to 0.1
 
 **"train_path"** / **"valid_path"**<br>
 If "train_path" / "valid_path" is a directory, then each file in the directory is treated as one document if context_len > 0. If "train_path" / "valid_path" is a file, then that file is treated as one single document if context_len > 0.
