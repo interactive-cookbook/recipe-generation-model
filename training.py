@@ -50,11 +50,12 @@ def _run_training_loop(general_config: dict, train_config: TrainingArguments):
     """
     print("---------- Loading Model and Tokenizer ----------")
     model_path = general_config['model_name_or_path']
-    try:
-        tokenizer_path = general_config['tokenizer_name_or_path']
-    except KeyError:
-        tokenizer_path = general_config['model_name_or_path']
-    model = T5ForConditionalGeneration.from_pretrained(model_path)
+    # Change dropout rate if provided
+    drop_out = general_config.get('dropout_rate', 0.1)  # default value of the T5ForConditionalGeneration is 0.1
+
+    tokenizer_path = general_config.get('tokenizer_name_or_path', general_config['model_name_or_path'])
+
+    model = T5ForConditionalGeneration.from_pretrained(model_path, dropout_rate=drop_out)
     tokenizer = T5Tokenizer.from_pretrained(tokenizer_path)
 
     # Add the new special token
@@ -66,13 +67,6 @@ def _run_training_loop(general_config: dict, train_config: TrainingArguments):
 
     # These get saved together with the model in a config.json file to store them
     model.config.task_specific_params = {'translation_cond_amr_to_text': general_config}
-
-    # Change dropout rate if provided
-    try:
-        drop_out = general_config['dropout_rate']
-        model.config.dropout_rate = drop_out
-    except KeyError:
-        pass
 
     print("---------- Reading the Data ----------")
     train_data_path = os.path.join(general_config['corpus_dir'], general_config['train_path'])
