@@ -1,10 +1,16 @@
 import os
+
+import comet_ml
 import torch
-from transformers import T5ForConditionalGeneration, T5Tokenizer, Trainer
-from transformers import TrainingArguments
+from transformers import T5ForConditionalGeneration, T5Tokenizer, Trainer, Seq2SeqTrainer
+from transformers import TrainingArguments, Seq2SeqTrainingArguments
 import json
 import torch.cuda
 import argparse
+import evaluate
+import numpy as np
+from copy import deepcopy
+from comet_ml import Experiment
 
 from dataset_reader import build_dataset
 
@@ -36,18 +42,23 @@ def train_generation_model(config_file):
 
     torch.cuda.empty_cache()
 
-    training_args = TrainingArguments(**config_args['train_args'])
+    training_args = Seq2SeqTrainingArguments(**config_args['train_args'])
 
     _run_training_loop(config_args['gen_args'], training_args)
 
 
-def _run_training_loop(general_config: dict, train_config: TrainingArguments):
+def _run_training_loop(general_config: dict, train_config: Seq2SeqTrainingArguments):
     """
     Runs the complete training of a T5 model
     :param general_config: general configuration parameters
     :param train_config: parameters for the Trainer
     :return:
     """
+
+    #comet_ml.init(project_name='recipe_proj', api_key="O8MdPzcEFBU5cd2o2OtqV6Pfy")
+    #os.environ["COMET_MODE"] = "ONLINE"
+    #os.environ["COMET_LOG_ASSETS"] = "True"
+
     print("---------- Loading Model and Tokenizer ----------")
     model_path = general_config['model_name_or_path']
     # Change dropout rate if provided
@@ -88,9 +99,29 @@ def _run_training_loop(general_config: dict, train_config: TrainingArguments):
                                   sep_token=separator_token)
     print(f'Loaded validation data set of {len(valid_dataset)} instances.')
 
+    def compute_metrics(eval_preds):
+        metric = evaluate.load("sacrebleu")
+        predictions, labels = eval_preds
+        if isinstance(predictions, tuple):
+            predictions = predictions[0]
+
+        decoded_preds = tokenizer.batch_decode(predictions, skip_special_tokens=True)
+        labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
+        decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
+
+        # postprocessing
+        decoded_preds = [pred.strip() for pred in decoded_preds]
+        decoded_refs = [[l.strip()] for l in decoded_labels]
+
+        result = metric.compute(predictions=decoded_preds, references=decoded_refs)
+
+        return {'bleu': round(result['score'], 4)}
+
     print("---------- Starting training ----------")
-    trainer = Trainer(model=model, args=train_config, train_dataset=train_dataset,
-                      eval_dataset=valid_dataset, data_collator=T2TDataCollator())
+    trainer = Seq2SeqTrainer(model=model, args=train_config, train_dataset=train_dataset,
+                      eval_dataset=valid_dataset, data_collator=T2TDataCollator(),
+                      compute_metrics=compute_metrics)
+    #trainer.add_callback(CustomCallback(trainer))
     trainer.train()
     print("---------- Finished training ----------")
     print("---------- Saving model and tokenizer ----------")
