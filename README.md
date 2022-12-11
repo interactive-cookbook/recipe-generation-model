@@ -115,7 +115,7 @@ Example configuration file:
     "corpus_dir": "./data/ara1_amrs",
     "train_path": "train",
     "valid_path": "val",
-    "max_in_len": 1024,
+    "max_in_len": 0,
     "max_out_len": 1024,
     "context_len": 1,
     "linearization": "penman",
@@ -126,21 +126,26 @@ Example configuration file:
       "output_dir": "./models/train_t5_ara1_amr/t5_ara1_amr",
       "do_train": true,
       "do_eval": true,
-      "evaluation_strategy": "epoch",
+      "predict_with_generate": true,
+      "evaluation_strategy": "steps",
+      "eval_steps": "step",
       "overwrite_output_dir": false,
-      "prediction_loss_only": true,
-      "num_train_epochs": 8,
-      "save_steps": 20,
+      "num_train_epochs": 100,
+      "save_strategy": "steps"
+      "save_steps": 46,
       "save_total_limit": 2,
       "per_device_train_batch_size": 1,
       "per_device_eval_batch_size": 1,
-      "gradient_accumulation_steps": 24,
+      "gradient_accumulation_steps": 25,
       "learning_rate": 1e-4,
       "seed": 42,
       "log_level": "info",
-      "logging_strategy": "epoch",
+      "logging_strategy": "steps",
+      "logging_steps": 46,
       "remove_unused_columns": false,
-      "no_cuda": false
+      "no_cuda": false,
+      "load_best_model_at_end": true,
+      "metric_for_best_model": "eval_bleu"
   }
 }
 ```
@@ -161,7 +166,7 @@ The key, value pairs in the scope of "gen_args" are needed to specify the follow
 If "train_path" / "valid_path" is a directory, then each file in the directory is treated as one document if context_len > 0. If "train_path" / "valid_path" is a file, then that file is treated as one single document if context_len > 0.
 
 **train_args**<br>
-The "train_args" dictionary will be converted into a TrainingArguments object and passed to the transformer [Trainer](https://huggingface.co/docs/transformers/main_classes/trainer#trainer). See the [TrainerArguments](https://huggingface.co/docs/transformers/main_classes/trainer#transformers.TrainingArguments) documentation for information about possible parameters and default values. 
+The "train_args" dictionary will be converted into a TrainingArguments object and passed to the transformer [Seq2SeqTrainer](https://huggingface.co/docs/transformers/main_classes/trainer#transformers.Trainer). See the [Seq2SeqTrainerArguments](https://huggingface.co/docs/transformers/main_classes/trainer#transformers.Seq2SeqTrainingArguments) documentation for information about possible parameters and default values. 
 
 **linearization**<br>
 Currently implemented are two options: 
@@ -169,7 +174,7 @@ Currently implemented are two options:
 * 'penman_wo_alignments': removes the node-to-token alignments from the amr string (i.e. removes all '~e.X' occurences where X is the aligned token ID)
 
 **"max_in_len"/"max_out_len"**<br>
-If no limitation and truncation of the input / output sequence should happen, then set the corresponding value to 0. Sequences that get truncated are removed from the training data set, i.e. if an input sequence or an output sequences exceeds the maximum length, then that input/output pair is removed from the data set. 
+If no limitation and truncation of the input / output sequence should happen, then set the corresponding value to 0. Sequences that get truncated are removed from the training data set, i.e. if an input sequence or an output sequences exceeds the maximum length, then that input/output pair is removed from the data set. **Note**: not restricting the output length during generation will negatively impact your generated texts. If "do_eval" is set to true, "max_out_len" should therefore be != 0. 
 
 **Important:** do not change **"remove_unused_columns"** to true or the functions will not work any more (see [here](https://github.com/huggingface/transformers/issues/9520) for more information)
 
