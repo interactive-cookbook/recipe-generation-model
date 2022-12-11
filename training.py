@@ -2,8 +2,9 @@ import os
 
 import comet_ml
 import torch
-from transformers import T5ForConditionalGeneration, T5Tokenizer, Trainer, Seq2SeqTrainer
-from transformers import TrainingArguments, Seq2SeqTrainingArguments
+from transformers import T5ForConditionalGeneration, T5Tokenizer, Seq2SeqTrainer
+from transformers import Seq2SeqTrainingArguments
+from transformers import TrainerCallback
 import json
 import torch.cuda
 import argparse
@@ -121,12 +122,27 @@ def _run_training_loop(general_config: dict, train_config: Seq2SeqTrainingArgume
     trainer = Seq2SeqTrainer(model=model, args=train_config, train_dataset=train_dataset,
                       eval_dataset=valid_dataset, data_collator=T2TDataCollator(),
                       compute_metrics=compute_metrics)
-    #trainer.add_callback(CustomCallback(trainer))
+    trainer.add_callback(CustomCallback(trainer))
     trainer.train()
     print("---------- Finished training ----------")
     print("---------- Saving model and tokenizer ----------")
     trainer.save_model(train_config.output_dir)
     tokenizer.save_pretrained(train_config.output_dir)
+
+
+class CustomCallback(TrainerCallback):
+    """
+    Trainer to compute and log BLEU during training
+    """
+    def __init__(self, trainer) -> None:
+        super().__init__()
+        self._trainer = trainer
+
+    def on_step_end(self, args, state, control, **kwargs):
+        if control.should_evaluate:
+            control_copy = deepcopy(control)
+            self._trainer.evaluate(eval_dataset=self._trainer.train_dataset, metric_key_prefix="train")
+            return control_copy
 
 
 if __name__=='__main__':
