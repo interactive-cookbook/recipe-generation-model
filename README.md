@@ -11,14 +11,7 @@ The Readme contains information about
 * and [evaluating](https://github.com/interactive-cookbook/recipe-generation-model#automatic-evaluation) the generated texts
 
 ## Requirements 
-Tested with python 3.7 (and previously also with python 3.6 but huggingface evaluate library requires python 3.7) and the library versions listed in brackets below.
-
-The [networkX library](https://networkx.org/documentation/stable/index.html) (really needed?) (2.6.3):
-* `pip install networkx[default]`
-* `pip install graphviz`
-
-The [penman library](https://github.com/goodmami/penman/) (really needed?) (1.2.2):
-* `pip install penman`
+Tested with python 3.7 and 3.8 (and previously also with python 3.6 but huggingface evaluate library requires python 3.7) and the library versions listed in brackets below.
 
 The [pytorch library](https://pytorch.org/get-started/locally/) (1.12.1)
 
