@@ -48,19 +48,22 @@ def pred_and_eval(inference_config_file):
     generator_config = config_args['generator_args']
     context_len = inf_config['context_len']
     model_path = generator_config['model_name_or_path']
+    model_checkpoint = generator_config.get('checkpoint', None)
     inf_output_file = inf_config['output_file']
     beam_size = generator.num_beams
     test_data_set = f'{inf_config["corpus_dir"]}/{inf_config["test_path"]}'
     linearization = generator.linearization
 
-    pred_file, ref_file, model_name = get_inference_out_path(context_len, model_path, inf_output_file)
+    pred_file, ref_file, model_name = get_inference_out_path(context_len, model_path, inf_output_file, model_checkpoint)
     run_and_save_evaluation(pred_file, ref_file, context_len, model_name, test_data_set, beam_size, linearization)
 
 
-def get_inference_out_path(context_len, model_path, output_file) -> tuple:
+def get_inference_out_path(context_len, model_path, output_file, model_checkpoint=None) -> tuple:
 
     model_path = os.path.join(Path(model_path))
     model_name = str(model_path.split(os.sep)[-1])
+    if model_checkpoint:
+        model_name += f'_{model_checkpoint}'
     output_path = os.path.join(Path('./output'), model_name, f'{context_len}_context')
 
     prediction_path = os.path.join(output_path, output_file)
@@ -72,58 +75,6 @@ def get_inference_out_path(context_len, model_path, output_file) -> tuple:
 
 if __name__=='__main__':
 
-
-    #pred_and_eval('inference_configs/t5_amrlib_ara1_split_1/inf_t5_amrlib_ara1_split_1_ara1_split_1_1_90.json')
-    #pred_and_eval('inference_configs/t5_amrlib_ara1_2_split_1/inf_t5_amrlib_ara1_2_split_1_ara1_2_split_1_1_90.json')
-    #pred_and_eval('inference_configs/t5_amrlib_ara1_2_split_3/inf_t5_amrlib_ara1_2_split_3_ara1_2_split_3_1_90.json')
-
-    #pred_and_eval('inference_configs/t5_amrlib_ara1_orig_1/inf_t5_amrlib_ara1_orig_1_ara1_split_1_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib/t5_amrlib_ara1_split_0_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib/t5_amrlib_ara1_2_split_0_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib/t5_amrlib_ms_amr_0_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib/t5_amrlib_amr3_0_0_1.json')
-
-    #pred_and_eval('inference_configs/t5_amrlib_ara1_split_1_na/inf_t5_amrlib_ara1_split_1_na_ara1_split_1_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib_ara1_2_split_1_na/inf_t5_amrlib_ara1_2_split_1_na_ara1_2_split_1_1.json')
-
-    #pred_and_eval('inference_configs/t5_amrlib_ara1_split_1_na/inf_t5_amrlib_ara1_split_1_na_ara1_split_1_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib_ara1_2_split_1_na/inf_t5_amrlib_ara1_2_split_1_na_ara1_2_split_1_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib_ara1_split_1/inf_t5_amrlib_ara1_split_1_ara1_split_1_1_na.json')
-    #pred_and_eval('inference_configs/t5_amrlib_ara1_2_split_1/inf_t5_amrlib_ara1_2_split_1_ara1_2_split_1_1_na.json')
-    #pred_and_eval('inference_configs/t5_amr2/t5_amr2_ara1_split_0_1.json')
-    #pred_and_eval('inference_configs/t5_amr2/t5_amr2_ara1_2_split_0_1.json')
-    #pred_and_eval('inference_configs/t5_amr2/t5_amr2_ms_amr_0_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib/t5_amrlib_amr3_0_0_1.json')
-    #pred_and_eval('inference_configs/t5_amr2/t5_amr2_amr3_0_0_1.json')
-
-    #pred_and_eval('inference_configs/t5_amrlib_ms_amr_ara1_split_1/inf_t5_amrlib_ms_amr_ara1_split_1_ara1_split_0_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib_ms_amr_ara1_split_1/inf_t5_amrlib_ms_amr_ara1_split_1_ara1_split_1_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib_ms_amr_ara1_2_split_1/inf_t5_amrlib_ms_amr_ara1_2_split_1_ara1_2_split_0_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib_ms_amr_ara1_2_split_1/inf_t5_amrlib_ms_amr_ara1_2_split_1_ara1_2_split_1_1.json')
-
-    #pred_and_eval('inference_configs/t5_amrlib_ara2_split_1/inf_t5_amrlib_ara2_split_1_ara2_split_0_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib_ara2_split_1/inf_t5_amrlib_ara2_split_1_ara2_split_1_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib_ara2_split_1/inf_t5_amrlib_ara2_split_1_ara1_2_split_0_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib_ara2_split_1/inf_t5_amrlib_ara2_split_1_ara1_2_split_1_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib_ara1_split_1/inf_t5_amrlib_ara1_split_1_ara2_split_1_1.json')
-
-    #pred_and_eval('inference_configs/t5_amrlib_ara1_split_1_epochs/inf_t5_amrlib_ara1_split_1_ara1_split_0_1.json')
-    pred_and_eval('inference_configs/t5_amrlib_ara1_split_1_epochs/inf_t5_amrlib_ara1_split_1_ara1_split_1_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib_ara1_split_3_epochs/inf_t5_amrlib_ara1_split_3_ara1_split_0_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib_ara1_split_3_epochs/inf_t5_amrlib_ara1_split_3_ara1_split_1_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib_ara1_split_3_epochs/inf_t5_amrlib_ara1_split_3_ara1_split_2_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib_ara1_split_3_epochs/inf_t5_amrlib_ara1_split_3_ara1_split_3_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib_ara1_2_split_1_epochs/inf_t5_amrlib_ara1_2_split_1_ara1_2_split_0_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib_ara1_2_split_1_epochs/inf_t5_amrlib_ara1_2_split_1_ara1_2_split_1_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib_ara1_2_split_3_epochs/inf_t5_amrlib_ara1_2_split_3_ara1_2_split_0_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib_ara1_2_split_3_epochs/inf_t5_amrlib_ara1_2_split_3_ara1_2_split_1_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib_ara1_2_split_3_epochs/inf_t5_amrlib_ara1_2_split_3_ara1_2_split_2_1.json')
-    #pred_and_eval('inference_configs/t5_amrlib_ara1_2_split_3_epochs/inf_t5_amrlib_ara1_2_split_3_ara1_2_split_3_1.json')
-
-
-
-
-
-
-
+    pred_and_eval('inference_configs/t5_amrlib_ara1_split_1/inf_t5_amrlib_ara1_split_1_ara1_split_1.json')
+    pred_and_eval('inference_configs/t5_amrlib_ara1_split_0/inf_t5_amrlib_ara1_split_0_ara1_split_0.json')
 
