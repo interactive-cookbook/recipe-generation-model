@@ -72,7 +72,7 @@ def compute_bleu(predictions, references):
     # https://huggingface.co/spaces/evaluate-metric/sacrebleu
     references = [[r] for r in references]
     sacre_bleu_scorer = evaluate.load("sacrebleu")
-    sacrebleu = sacre_bleu_scorer.compute(predictions=predictions, references=references)
+    sacrebleu = sacre_bleu_scorer.compute(predictions=predictions, references=references, use_effective_order=True)
     print(f'BLEU Score: {sacrebleu}')
     return sacrebleu
 
@@ -134,5 +134,10 @@ if __name__=='__main__':
     #run_eval("./output/t5_amr/0_context/output_amr3_0_beam_1.txt")
     #run_eval("./output/t5_amr/0_context/output_ara1_split_beam_1_na.txt")
 
+    #generated_snts = read_file_for_eval('../recipe-generation/output/test_split_1_context_ids.txt')
+    #ref_snts = read_file_for_eval('../recipe-generation/output/test_split_references.txt')
 
+    #compute_bleu(generated_snts, ref_snts)
+
+    #run_eval('./output/t5_amrlib_ara1_split_1_checkpoint-3726/1_context/output_ara1_split_1_test.txt')
 

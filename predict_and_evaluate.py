@@ -8,18 +8,24 @@ from evaluation import read_file_for_eval, compute_meteor, compute_bleurt, compu
 
 
 def run_and_save_evaluation(pred_file, ref_file, context_len, model_name, test_data_set,
-                            beam_size, linearization):
+                            beam_size, linearization, model_config):
 
     pred_sentences = read_file_for_eval(pred_file)
     ref_sentences = read_file_for_eval(ref_file)
 
+    task_model_config = model_config.task_specific_params['translation_cond_amr_to_text']
+
     output_file = pred_file[:-4] + '_evaluation.txt'
     with open(output_file, "w", encoding="utf-8") as out:
         out.write(f'Model used: {model_name}\n')
+        out.write(f'Train dataset: {task_model_config["corpus_dir"]}\n')
+        out.write(f'Train context length: {task_model_config.get("context_len", 0)}\n')
+        out.write(f'Train linearization: {task_model_config.get("linearization", "penman")}\n')
+        out.write(f'Dropout: {model_config.dropout_rate}\n')
         out.write(f'Test dataset: {test_data_set}\n')
         out.write(f'Test context length: {context_len}\n')
         out.write(f'Beam size: {beam_size}\n')
-        out.write(f'Graph linearization: {linearization}\n\n')
+        out.write(f'Test linearization: {linearization}\n\n')
 
         out.write('BLEU Score:\n')
         out.write(f'{compute_bleu(pred_sentences, ref_sentences)}\n')
@@ -55,7 +61,8 @@ def pred_and_eval(inference_config_file):
     linearization = generator.linearization
 
     pred_file, ref_file, model_name = get_inference_out_path(context_len, model_path, inf_output_file, model_checkpoint)
-    run_and_save_evaluation(pred_file, ref_file, context_len, model_name, test_data_set, beam_size, linearization)
+    run_and_save_evaluation(pred_file, ref_file, context_len, model_name, test_data_set, beam_size, linearization,
+                            generator.model.config)
 
 
 def get_inference_out_path(context_len, model_path, output_file, model_checkpoint=None) -> tuple:
@@ -75,6 +82,14 @@ def get_inference_out_path(context_len, model_path, output_file, model_checkpoin
 
 if __name__=='__main__':
 
-    pred_and_eval('inference_configs/t5_amrlib_ara1_split_1/inf_t5_amrlib_ara1_split_1_ara1_split_1.json')
-    pred_and_eval('inference_configs/t5_amrlib_ara1_split_0/inf_t5_amrlib_ara1_split_0_ara1_split_0.json')
+    inf_dir = './inference_configs'
+    for model_dir in os.listdir(inf_dir):
+        if model_dir == 'old' or model_dir == 'validation_set':
+            continue
+        for inf_file in os.listdir(os.path.join(inf_dir, model_dir)):
+            inf_file_path = os.path.join(inf_dir, model_dir, inf_file)
+            pred_and_eval(inf_file_path)
+
+
+
 
