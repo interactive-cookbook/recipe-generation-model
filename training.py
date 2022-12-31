@@ -61,6 +61,7 @@ def _run_training_loop(general_config: dict, train_config: Seq2SeqTrainingArgume
     #comet_ml.init(api_key="O8MdPzcEFBU5cd2o2OtqV6Pfy")
     os.environ["COMET_MODE"] = "ONLINE"
     os.environ["COMET_LOG_ASSETS"] = "True"
+    Experiment()
 
     print("---------- Loading Model and Tokenizer ----------")
     model_path = general_config['model_name_or_path']
@@ -172,31 +173,29 @@ class ConvergenceStoppingCallback(TrainerCallback):
         self.early_stopping_threshold = early_stopping_threshold
         # early_stopping_patience_counter denotes the number of times validation metrics failed to improve.
         self.early_stopping_patience_counter = 0
-        # self.best_loss = 100
+        self.best_loss = 100
 
     def check_metric_value(self, args, state, control):
         # best_metric is fixed to loss here so lower values are better
         # training metrices come before evaluation metrices in state.log_history because first eval
         # on train set takes place
         current_loss = None
-        prev_best_loss = 100
         for i in range(len(state.log_history)-1, -1, -1):
             try:
                 found_loss = state.log_history[i]['train_loss']
-                if not current_loss:
-                    current_loss = found_loss
-                elif current_loss and not prev_best_loss:
-                    if found_loss < prev_best_loss:
-                        prev_best_loss = found_loss
+                current_loss = found_loss
+                break
             except KeyError:
                 continue
         assert current_loss
+        print(f'best loss found: {self.best_loss} and current loss: {current_loss}')
 
         operator = np.less
-        if (operator(current_loss, prev_best_loss)
-            and abs(current_loss - prev_best_loss) > self.early_stopping_threshold
+        if (operator(current_loss, self.best_loss)
+            and abs(current_loss - self.best_loss) > self.early_stopping_threshold
         ):
             self.early_stopping_patience_counter = 0
+            self.best_loss = current_loss
         else:
             self.early_stopping_patience_counter += 1
 
@@ -208,6 +207,7 @@ class ConvergenceStoppingCallback(TrainerCallback):
             self.check_metric_value(args, state, control)
             if self.early_stopping_patience_counter >= self.early_stopping_patience:
                 control.should_training_stop = True
+                control_copy.should_training_stop = True
             return control_copy
 
 
