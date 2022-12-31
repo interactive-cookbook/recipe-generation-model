@@ -27,7 +27,7 @@ def read_amr_file(file) -> List[str]:
     return amrs
 
 
-def assign_recipe2split(amr_doc_files: List[str], train_per: float, val_per: float) \
+def assign_recipe2split(amr_doc_files: List[str], train_per: float, val_per: float, test_recipes=None) \
         -> Tuple[List[str], List[str], List[str]]:
     """
     Randomly assigns the files in amr_doc_files to a train, val and test split accordingt to the
@@ -35,19 +35,28 @@ def assign_recipe2split(amr_doc_files: List[str], train_per: float, val_per: flo
     :param amr_doc_files: list of all the file names to assign to the different splits
     :param train_per: proportion of files to use for training
     :param val_per: proportion of files to use for validation
+    :param test_recipes: optional set of the files for the test set
     :return: Tuple(List, List, List)
             List with file names assigned to training split
             List with file names assigned to validation split
             List with file names assigned to test split
     """
+
     n_files = len(amr_doc_files)
     n_train_split = math.ceil(n_files * train_per)
     n_val_split = math.ceil(n_files * val_per)
+    if not test_recipes:
+        random.shuffle(amr_doc_files)
+        train_files = amr_doc_files[:n_train_split]
+        val_files = amr_doc_files[n_train_split:n_val_split + n_train_split]
+        test_files = amr_doc_files[n_val_split + n_train_split:]
+    else:
+        remaining_amr_files = [file for file in amr_doc_files if file not in test_recipes]
+        random.shuffle(remaining_amr_files)
+        train_files = remaining_amr_files[:n_train_split]
+        val_files = remaining_amr_files[n_train_split:n_val_split + n_train_split]
+        test_files = list(test_recipes)
 
-    random.shuffle(amr_doc_files)
-    train_files = amr_doc_files[:n_train_split]
-    val_files = amr_doc_files[n_train_split:n_val_split + n_train_split]
-    test_files = amr_doc_files[n_val_split + n_train_split:]
     assert len(train_files) + len(val_files) + len(test_files) == len(amr_doc_files)
 
     return train_files, val_files, test_files

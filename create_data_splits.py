@@ -87,7 +87,7 @@ def create_random_split_ara_corpus(amr_corpus_dir, train_per, val_per, test_per)
     create_split_files(amr_corpus_dir, split_dir, train_docs, val_docs, test_docs)
 
 
-def create_recipe2split_assignment(amr_corpus_dir, split_name, train_per=0.8, val_per=0.1, test_per=0.1):
+def create_recipe2split_assignment(amr_corpus_dir, split_name, train_per=0.8, val_per=0.1, test_per=0.1, test_recipes=None):
     """
     Traverses all files in all subdirectories of amr_corpus_dir and randomly assigns them to train, val or
     test split.
@@ -100,6 +100,7 @@ def create_recipe2split_assignment(amr_corpus_dir, split_name, train_per=0.8, va
     :param train_per: proportion of files to use for training
     :param val_per: proportion of files to use for validation
     :param test_per: proportion of files to use for testing
+    :param test_recipes: optional set of the files for the test split
     :return:
     """
     assert train_per + val_per + test_per == 1
@@ -111,7 +112,7 @@ def create_recipe2split_assignment(amr_corpus_dir, split_name, train_per=0.8, va
             recipe_path = os.path.join(dish, recipe)
             recipes_amr_files.append(recipe_path)
 
-    train_files, val_files, test_files = assign_recipe2split(recipes_amr_files, train_per, val_per)
+    train_files, val_files, test_files = assign_recipe2split(recipes_amr_files, train_per, val_per, test_recipes)
     Path('./data_splits').mkdir(exist_ok=True, parents=True)
     with open(os.path.join('./data_splits/', split_name + '.tsv'), 'w', encoding='utf-8') as f:
         for train_recipe in train_files:
@@ -154,11 +155,16 @@ def create_split_files_from_assignment(assignment_file, corpus_dir, split_dir):
 
 if __name__=='__main__':
     """
+    create_split_files_from_assignment('./data_splits/final_ara1_split.tsv',
+                                       '../recipe-generation/training/tuning_data_sets/gold_amrs_ara1_explicit',
+                                       './data/ara1_amrs_explicit')
+    """
+    """
     create_recipe2split_assignment('../recipe-generation/training/tuning_data_sets/ara1_amr_graphs',
                                    'ara1_data_split')
     create_recipe2split_assignment('../recipe-generation/training/tuning_data_sets/ara2_amr_graphs',
                                    'ara2_data_split')
-    """
+    
 
     create_split_files_from_assignment('./data_splits/ara1_data_split.tsv',
                                        '../recipe-generation/training/tuning_data_sets/ara1_amr_graphs',
@@ -172,3 +178,19 @@ if __name__=='__main__':
     create_split_files_from_assignment('./data_splits/ara2_data_split.tsv',
                                        '../recipe-generation/training/tuning_data_sets/ara2_amr_graphs',
                                        './data/ara1_2_amrs')
+    
+
+    create_recipe2split_assignment('../recipe-generation/training/tuning_data_sets/gold_amrs_ara1',
+                                   'final_ara1_split',
+                                   test_recipes={"baked_ziti\\baked_ziti_5_gold.txt",
+                                                 "blueberry_banana_bread\\blueberry_banana_bread_10_gold.txt",
+                                                 "cauliflower_mash\\cauliflower_mash_3_gold.txt",
+                                                 "chewy_chocolate_chip_cookies\\chewy_chocolate_chip_cookies_9_gold.txt",
+                                                 "garam_masala\\garam_masala_3_gold.txt",
+                                                 "homemade_pizza_dough\\homemade_pizza_dough_4_gold.txt",
+                                                 "orange_chicken\\orange_chicken_5_gold.txt",
+                                                 "pumpkin_chocolate_chip_bread\\pumpkin_chocolate_chip_bread_7_gold.txt",
+                                                 "slow_cooker_chicken_tortilla_soup\\slow_cooker_chicken_tortilla_soup_3_gold.txt",
+                                                 "waffles\\waffles_7_gold.txt"})
+    """
+
