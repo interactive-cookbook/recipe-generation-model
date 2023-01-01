@@ -9,39 +9,29 @@ from evaluation import read_file_for_eval, compute_meteor, compute_bleurt, compu
 
 def run_and_save_evaluation(pred_file, ref_file, context_len, model_name, test_data_set,
                             beam_size, linearization, model_config):
-
     pred_sentences = read_file_for_eval(pred_file)
     ref_sentences = read_file_for_eval(ref_file)
 
     task_model_config = model_config.task_specific_params['translation_cond_amr_to_text']
 
-    output_file = pred_file[:-4] + '_evaluation.txt'
-    with open(output_file, "w", encoding="utf-8") as out:
-        out.write(f'Model used: {model_name}\n')
-        out.write(f'Train dataset: {task_model_config["corpus_dir"]}\n')
-        out.write(f'Train context length: {task_model_config.get("context_len", 0)}\n')
-        out.write(f'Train linearization: {task_model_config.get("linearization", "penman")}\n')
-        out.write(f'Dropout: {model_config.dropout_rate}\n')
-        out.write(f'Test dataset: {test_data_set}\n')
-        out.write(f'Test context length: {context_len}\n')
-        out.write(f'Beam size: {beam_size}\n')
-        out.write(f'Test linearization: {linearization}\n\n')
+    bleurt_score = compute_bleurt(pred_sentences, ref_sentences)
+    data = {
+        'Model used': model_name, 'Train dataset': task_model_config["corpus_dir"],
+        'Train context length': task_model_config.get("context_len", 0),
+        'Train linearization': task_model_config.get("linearization", "penman"),
+        'Dropout': model_config.dropout_rate, 'Test dataset': test_data_set, 'Test context length': context_len,
+        'Beam size': beam_size, 'Test linearization': linearization,
+        'BLEU Score': compute_bleu(pred_sentences, ref_sentences),
+        'chrF Score': compute_chrf(pred_sentences, ref_sentences),
+        'chrF++ Score': compute_chrf_plus(pred_sentences, ref_sentences),
+        'ROUGE score': compute_rouge(pred_sentences, ref_sentences),
+        'METEOR score': compute_meteor(pred_sentences, ref_sentences), 'BLEURT scores': bleurt_score["scores"],
+        'BLEURT Average': bleurt_score["average"]
+    }
 
-        out.write('BLEU Score:\n')
-        out.write(f'{compute_bleu(pred_sentences, ref_sentences)}\n')
-        out.write('chrF Score:\n')
-        out.write(f'{compute_chrf(pred_sentences, ref_sentences)}\n')
-        out.write('chrF++ Score:\n')
-        out.write(f'{compute_chrf_plus(pred_sentences, ref_sentences)}\n')
-        out.write('ROUGE score: \n')
-        out.write(f'{compute_rouge(pred_sentences, ref_sentences)}\n')
-        out.write('METEOR score: \n')
-        out.write(f'{compute_meteor(pred_sentences, ref_sentences)}\n')
-        out.write('BLEURT scores: \n')
-        bleurt_score = compute_bleurt(pred_sentences, ref_sentences)
-        out.write(f'{bleurt_score["scores"]}\n')
-        out.write('BLEURT Average: \n')
-        out.write(f'{bleurt_score["average"]}\n')
+    output_file = pred_file[:-4] + '_evaluation.txt'
+    with open(output_file, 'w') as f:
+        json.dump(data, f)
 
 
 def pred_and_eval(inference_config_file):
