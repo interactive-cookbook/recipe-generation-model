@@ -107,59 +107,15 @@ Note that all logging information is only printed to the command line. In order 
 
 `python inference.py --config [path_to_config_file`
 
-where the config file should be a .json file including the configuration for the inference following the format of the files in the [inference_configs](https://github.com/interactive-cookbook/recipe-generation-model/tree/main/inference_configs) folder. 
+where the config file should be a .json file including the configuration for the inference following the format of the files in the [inference_configs](https://github.com/interactive-cookbook/recipe-generation-model/tree/main/inference_configs) folder. See also the [Wiki](https://github.com/interactive-cookbook/recipe-generation-model/wiki/Inference-Configuration-Files) for more detail on the parameters.
 
-Example
-```
-{
-  "generator_args": {
-    "model_name_or_path": "./models/t5_amrlib",
-    "tokenizer_name_or_path": "t5-base",
-    "checkpoint": "checkpoint-3726",
-    "device": "cpu",
-    "batch_size": 4,
-    "num_beams": 1,
-    "num_ret_seq": 1,
-    "max_in_len": 1024,
-    "max_out_len": 1024,
-    "linearization": "penman"
-  },
-  "test_args": {
-    "corpus_dir": "./data/ara1_amrs",
-    "test_path": "test",
-    "context_len": 1,
-    "output_file": "output_amrlib_t5.txt"
-  }
-}
-```
-
-"generator_args" are the parameters used for instantiating an RecipeGenerator object 
-* **"model_name_or_path"**: path to a the folder of a model trained with the training.py script, folder must also contain the config.json generated during training
-* **"tokenizer_name_or_path"**: path to the folder containing the tokenizer used for training the model; all relevant files get saved in the same directory as the model so "model_name_or_path" and "tokenizer_name_or_path" should be identical usually
-* **"checkpoint"**: optional, if a specific checkpoint should be used that is stored as a subfolder of the model path then this should be the name of this subfolder 
-* **"device"**: "cpu" or e.g. 'cuda:0'
-* **"batch_size"**
-* **"num_beams"**: number of beams for the search
-* **"num_ret_seq"**: number of sequences to return per input; needs to be smaller or equal to "num_beams"
-* **"max_in_len"**: maximum input length; tokenizer will truncate longer input sequences; optional, default is set to 1024
-* **"max_out_len"**: maximum output length; tokenizer will truncate longer target sequences; optional, default is set to 1024
-* **"linearization"**: type of linearization to use (see explanation of training config above for the available options); optional, if not provided then the linearization used for training the model gets used
-
-**"max_in_len"/"max_out_len"**<br>
-If not specified in the inference configuration file then both get by default set to 1024. If no limitation and truncation of the input / output sequence should happen, then set the corresponding value to 0. But please note that setting "max_out_len" to 0 will have a negative impact on the inference results. 
-
-"test_args" are parameters for testing the model by generating the model predictions for a complete test data set. In case the sentence generation is integrated into another framework, they are not necessary. Instead, a RecipeGenerator object should be instantiated with the parameters of "generator_args" and then the arguments to the RecipeGenerator.generate method can be constructed at at a different place. 
-* **"corpus_dir"**: path to corpus directory, relative to inference.py
-* **"test_path"**: path to the file with the complete test data or to a folder with several files for testing; path is relative to "corpus_dir"
-* **"context_len"**: number of previous sentences of the same document to preprend to the current input graph
-* **"output_file"**: The name of the outputfile where all generated sentences get written to
 
 When running the inference.py script, this generates one single file for all the model predictions even if "test_path" is a directory with several files. Additionally, a second file is created containing all reference sentences for the generated sentences in the same order. This file has the same name as the one with the predictions, but with '\_references' as suffix. The files with the references and the predictions get created in the folder `repo_dir/output/[model_name]/[context_len]_context` where `model_name` is derived from "model_name-or_path"
 
 
 ## Automatic Evaluation
 
-The script (evaluation.py)[https://github.com/interactive-cookbook/recipe-generation-model/blob/main/evaluation.py] contains functions to compute BLEU, chrF, ROUGE, METEOR and BLEURT scores for the generated texts. 
+The script [evaluation.py](https://github.com/interactive-cookbook/recipe-generation-model/blob/main/evaluation.py) contains functions to compute BLEU, chrF, ROUGE, METEOR and BLEURT scores for the generated texts. 
 
 Running `python evaluation.py --input [path_input_file]` will compute all scores and print the output to the command line.
 
