@@ -121,16 +121,17 @@ Example configuration file:
       "do_train": true,
       "do_eval": true,
       "predict_with_generate": true,
+      "generation_max_length": 1024,
       "evaluation_strategy": "steps",
       "eval_steps": "step",
       "overwrite_output_dir": false,
-      "num_train_epochs": 100,
+      "num_train_epochs": 200,
       "save_strategy": "steps"
       "save_steps": 46,
       "save_total_limit": 2,
-      "per_device_train_batch_size": 1,
-      "per_device_eval_batch_size": 1,
-      "gradient_accumulation_steps": 25,
+      "per_device_train_batch_size": 6,
+      "per_device_eval_batch_size": 24,
+      "gradient_accumulation_steps": 4,
       "learning_rate": 1e-4,
       "seed": 42,
       "log_level": "info",
@@ -186,6 +187,7 @@ Example
   "generator_args": {
     "model_name_or_path": "./models/t5_amrlib",
     "tokenizer_name_or_path": "t5-base",
+    "checkpoint": "checkpoint-3726",
     "device": "cpu",
     "batch_size": 4,
     "num_beams": 1,
@@ -197,7 +199,7 @@ Example
   "test_args": {
     "corpus_dir": "./data/ara1_amrs",
     "test_path": "test",
-    "context_len": 0,
+    "context_len": 1,
     "output_file": "output_amrlib_t5.txt"
   }
 }
@@ -206,12 +208,13 @@ Example
 "generator_args" are the parameters used for instantiating an RecipeGenerator object 
 * **"model_name_or_path"**: path to a the folder of a model trained with the training.py script, folder must also contain the config.json generated during training
 * **"tokenizer_name_or_path"**: path to the folder containing the tokenizer used for training the model; all relevant files get saved in the same directory as the model so "model_name_or_path" and "tokenizer_name_or_path" should be identical usually
+* **"checkpoint"**: optional, if a specific checkpoint should be used that is stored as a subfolder of the model path then this should be the name of this subfolder 
 * **"device"**: "cpu" or e.g. 'cuda:0'
 * **"batch_size"**
 * **"num_beams"**: number of beams for the search
 * **"num_ret_seq"**: number of sequences to return per input; needs to be smaller or equal to "num_beams"
-* **"max_in_len"**: maximum input length; tokenizer will truncate longer input sequences
-* **"max_out_len"**: maximum output length; tokenizer will truncate longer target sequences
+* **"max_in_len"**: maximum input length; tokenizer will truncate longer input sequences; optional, default is set to 1024
+* **"max_out_len"**: maximum output length; tokenizer will truncate longer target sequences; optional, default is set to 1024
 * **"linearization"**: type of linearization to use (see explanation of training config above for the available options); optional, if not provided then the linearization used for training the model gets used
 
 **"max_in_len"/"max_out_len"**<br>
