@@ -4,11 +4,12 @@ This repository contains part of the code for the master thesis project of gener
 
 The generation model is a pretrained T5 model from huggingface which gets fine-tuned on amr-to-text generation. The code is based on and adapted from the scripts from the [amrlib library](https://github.com/bjascob/amrlib).
 
-The Readme contains information about
+The Readme contains basic information about
 * [Preparing data sets](https://github.com/interactive-cookbook/recipe-generation-model#data-set-preparation)
 * [Training the model](https://github.com/interactive-cookbook/recipe-generation-model#run-the-training)
 * [Generating texts](https://github.com/interactive-cookbook/recipe-generation-model#run-prediction)
-* and [evaluating](https://github.com/interactive-cookbook/recipe-generation-model#automatic-evaluation) the generated texts
+* and [Evaluating](https://github.com/interactive-cookbook/recipe-generation-model#automatic-evaluation) the generated texts
+More detailed information about each of the steps can be found in the Wiki.
 
 ## Requirements 
 Tested with python 3.7 and 3.8 (and previously also with python 3.6 but huggingface evaluate library requires python 3.7) and the library versions listed in brackets below.
@@ -102,6 +103,9 @@ Note that all logging information is only printed to the command line. In order 
 `python training.py --config [path_to_config_file] > path/log_file.txt`
 
 **Note**: the transformer Trainer.train() function by default uses all availabel gpu nodes if "no_cuda": false is set. In order to restrict training to a single gpu run e.g. `CUDA_VISIBLE_DEVICES="3", python training.py --config [path_to_config_file]`
+
+**Using comet.ml**<br>
+To track the training process with [comet.ml](https://www.comet.com/kastein#projects) uncomment lines 61-64 and line 130 in training.py and add your api key to line 61. 
 
 ## Run prediction
 
