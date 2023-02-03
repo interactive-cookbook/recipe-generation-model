@@ -89,8 +89,9 @@ class RecipeGenerator:
         self.task = 'translation_cond_amr_to_text'
         self.model_checkpoint = configuration.get('checkpoint', None)
         if self.model_checkpoint:
-            # TODO: make os independent
-            self.model = T5ForConditionalGeneration.from_pretrained(f'{configuration["model_name_or_path"]}/{self.model_checkpoint}')
+            #self.model = T5ForConditionalGeneration.from_pretrained(f'{configuration["model_name_or_path"]}/{self.model_checkpoint}')
+            self.model = T5ForConditionalGeneration.from_pretrained(os.path.join(configuration["model_name_or_path"],
+                                                                                 self.model_checkpoint))
         else:
             self.model = T5ForConditionalGeneration.from_pretrained(configuration['model_name_or_path'])
         self.tokenizer = T5Tokenizer.from_pretrained(configuration['tokenizer_name_or_path'])

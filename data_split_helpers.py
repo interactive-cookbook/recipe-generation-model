@@ -3,7 +3,6 @@ import random
 from pathlib import Path
 import math
 from typing import List, Tuple
-from argparse import ArgumentParser
 import shutil
 
 
@@ -92,7 +91,3 @@ def create_split_files(corpus_dir, split_dir, train_files: List[str], val_files:
         shutil.copy2(source, test_dir)
 
 
-
-if __name__=='__main__':
-
-    pass

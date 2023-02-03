@@ -58,7 +58,6 @@ def run_eval(model_output_file):
 
     assert len(generated_snts) == len(ref_snts)
 
-
     print(f'----- Evaluating {model_output_file} -----')
     compute_bleu(predictions=generated_snts, references=ref_snts)
     compute_chrf(predictions=generated_snts, references=ref_snts)
@@ -130,14 +129,8 @@ if __name__=='__main__':
     parser.add_argument('--input', required=True)
     args = parser.parse_args()
     run_eval(args.input)
-    #run_eval("./test_output/validation_ara1_2_split.txt")
-    #run_eval("./output/t5_amr/0_context/output_amr3_0_beam_1.txt")
-    #run_eval("./output/t5_amr/0_context/output_ara1_split_beam_1_na.txt")
 
-    #generated_snts = read_file_for_eval('../recipe-generation/output/test_split_1_context_ids.txt')
-    #ref_snts = read_file_for_eval('../recipe-generation/output/test_split_references.txt')
+    #run_eval('./output_test/t5_amrlib_ara1_split_0_checkpoint-138/0_context/output_ara1_split_0_test.txt')
+    #run_eval('./output_test/t5_amrlib_ara1_split_1_checkpoint-3726/1_context/output_ara1_split_1_test.txt')
 
-    #compute_bleu(generated_snts, ref_snts)
-
-    #run_eval('./output/t5_amrlib_ara1_split_1_checkpoint-3726/1_context/output_ara1_split_1_test.txt')
 

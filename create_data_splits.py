@@ -158,27 +158,11 @@ if __name__=='__main__':
     create_split_files_from_assignment('./data_splits/final_ara1_split.tsv',
                                        '../recipe-generation/training/tuning_data_sets/gold_amrs_ara1_explicit',
                                        './data/ara1_amrs_explicit')
-    """
-    """
+
     create_recipe2split_assignment('../recipe-generation/training/tuning_data_sets/ara1_amr_graphs',
                                    'ara1_data_split')
     create_recipe2split_assignment('../recipe-generation/training/tuning_data_sets/ara2_amr_graphs',
                                    'ara2_data_split')
-    
-
-    create_split_files_from_assignment('./data_splits/ara1_data_split.tsv',
-                                       '../recipe-generation/training/tuning_data_sets/ara1_amr_graphs',
-                                       './data/ara1_amrs')
-    create_split_files_from_assignment('./data_splits/ara2_data_split.tsv',
-                                       '../recipe-generation/training/tuning_data_sets/ara2_amr_graphs',
-                                       './data/ara2_amrs')
-    create_split_files_from_assignment('./data_splits/ara1_data_split.tsv',
-                                       '../recipe-generation/training/tuning_data_sets/ara1_amr_graphs',
-                                       './data/ara1_2_amrs')
-    create_split_files_from_assignment('./data_splits/ara2_data_split.tsv',
-                                       '../recipe-generation/training/tuning_data_sets/ara2_amr_graphs',
-                                       './data/ara1_2_amrs')
-    
 
     create_recipe2split_assignment('../recipe-generation/training/tuning_data_sets/gold_amrs_ara1',
                                    'final_ara1_split',

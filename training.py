@@ -2,7 +2,7 @@ import os
 
 import comet_ml
 import torch
-from transformers import T5ForConditionalGeneration, T5Tokenizer, Seq2SeqTrainer, IntervalStrategy, TrainingArguments, \
+from transformers import T5ForConditionalGeneration, T5Tokenizer, Seq2SeqTrainer, TrainingArguments, \
     TrainerState, TrainerControl
 from transformers import Seq2SeqTrainingArguments
 from transformers import TrainerCallback
@@ -18,7 +18,7 @@ from comet_ml import Experiment
 from dataset_reader import build_dataset
 
 
-# Taken from amrlib code: https://github.com/bjascob/amrlib/blob/master/amrlib/models/generate_t5/trainer.py
+# Collator taken from amrlib code: https://github.com/bjascob/amrlib/blob/master/amrlib/models/generate_t5/trainer.py
 class T2TDataCollator:
     def __call__(self, batch):
         input_ids = torch.stack([example['input_ids'] for example in batch])
@@ -58,10 +58,10 @@ def _run_training_loop(general_config: dict, train_config: Seq2SeqTrainingArgume
     :return:
     """
 
-    #comet_ml.init(api_key="O8MdPzcEFBU5cd2o2OtqV6Pfy")
-    os.environ["COMET_MODE"] = "ONLINE"
-    os.environ["COMET_LOG_ASSETS"] = "True"
-    Experiment()
+    #comet_ml.init(api_key="")
+    #os.environ["COMET_MODE"] = "ONLINE"
+    #os.environ["COMET_LOG_ASSETS"] = "True"
+    #Experiment()
 
     print("---------- Loading Model and Tokenizer ----------")
     model_path = general_config['model_name_or_path']
@@ -125,29 +125,14 @@ def _run_training_loop(general_config: dict, train_config: Seq2SeqTrainingArgume
     trainer = Seq2SeqTrainer(model=model, args=train_config, train_dataset=train_dataset,
                       eval_dataset=valid_dataset, data_collator=T2TDataCollator(),
                       compute_metrics=compute_metrics)
-    #trainer.add_callback(CustomCallback(trainer))
+
     trainer.add_callback(ConvergenceStoppingCallback(trainer))
-    trainer.add_callback(CometCallback())
+    #trainer.add_callback(CometCallback())
     trainer.train()
     print("---------- Finished training ----------")
     print("---------- Saving model and tokenizer ----------")
     trainer.save_model(train_config.output_dir)
     tokenizer.save_pretrained(train_config.output_dir)
-
-
-class CustomCallback(TrainerCallback):
-    """
-    Trainer to compute and log BLEU during training
-    """
-    def __init__(self, trainer) -> None:
-        super().__init__()
-        self._trainer = trainer
-
-    def on_evaluate(self, args: TrainingArguments, state: TrainerState, control: TrainerControl, **kwargs):
-        if control.should_evaluate:
-            control_copy = deepcopy(control)
-            self._trainer.evaluate(eval_dataset=self._trainer.train_dataset, metric_key_prefix="train", max_length=1024)
-            return control_copy
 
 
 class ConvergenceStoppingCallback(TrainerCallback):
@@ -166,7 +151,7 @@ class ConvergenceStoppingCallback(TrainerCallback):
     in [`TrainerState`].
     """
 
-    def __init__(self, trainer:Seq2SeqTrainer, early_stopping_patience: int = 15, early_stopping_threshold = 0.00005):
+    def __init__(self, trainer:Seq2SeqTrainer, early_stopping_patience: int = 15, early_stopping_threshold=0.00005):
         super().__init__()
         self._trainer = trainer
         self.early_stopping_patience = early_stopping_patience
@@ -217,6 +202,4 @@ if __name__=='__main__':
     parser.add_argument("--config", required=True, help="path to the configuration file for training")
     args = parser.parse_args()
     config_file = args.config
-    #config_file = "./training_configs/training_config_ara_dummy.json"
-    print(torch.cuda.device_count())
     train_generation_model(config_file)
