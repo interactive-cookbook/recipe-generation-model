@@ -38,7 +38,7 @@ nltk (3.7)
 
 The data sets for training and evaluating the generation models should follow the format of the official LDC AMR data sets: <br>
 All AMRs are separated from each other by an empty line and in addition to the AMRs, there can be one line at the top of the file starting with '# AMR release' which will be skipped. <br>
-Each AMR should at least consist of the metadata '# ::snt' and then the AMR graph in penman notation. All other potentially included metadata information will be ignored and if the penman representation contains token alignments they can be kept or removed by choosing the corresponding linearization during the training process (see below). 
+Each AMR should at least consist of the metadata '# ::snt' and then the AMR graph in penman notation. All other potentially included metadata information will be ignored and if the penman representation contains token alignments they can be kept or removed by choosing the corresponding linearization during the training process (see training config information). 
 
 Example file:
 ```
@@ -75,12 +75,12 @@ Run the `create_split_full_amr_corpus(amr_corpus_dir)` function with the path to
 
 ### LDC AMR 3.0 multi-sentence data set
 
-Run the `create_split_ms_corpus(amr_corpus_dir, train_per, val_per, test_per)` function where `amr_corpus_dir` is the path to a folder containing one file per document for which ms-amr annotations exist, each containing all AMRs (empty line separated) for that document in their original order. This will create three folders 'train', 'val' and 'test' in the './data' directory, such that the train folder will contain train_per\*100 percent of the available files, the val folder will contain val\*100 percent of the files and the test folder the rest. The files are randomly assigned to the splits.
+Run the `create_random_split_ms_amr_corpus(amr_corpus_dir, train_per, val_per, test_per)` function where `amr_corpus_dir` is the path to a folder containing one file per document for which ms-amr annotations exist, each containing all AMRs (empty line separated) for that document in their original order. This will create three folders 'train', 'val' and 'test' in the './data/ms_amr' directory, such that the train folder will contain train_per\*100 percent of the available files, the val folder will contain val\*100 percent of the files and the test folder the rest. The files are randomly assigned to the splits.
 
 ### ARA data set
 
 **Random Splits**<br>
-Run the `create_split_ara_corpus(amr_corpus, train_per, val_per, test_per)` function where `amr_corpus` is the path a main ara corpus folder, i.e. the folder containing one subfolder per dish with one amr file per recipe. This will create three folders 'train', 'val' and 'test' in the './data' directory, such that the train folder will contain train_per\*100 percent of the available files, the val folder will contain val\*100 percent of the files and the test folder the rest. The files are randomly assigned to the splits.
+Run the `create_random_split_ara_corpus(amr_corpus, train_per, val_per, test_per)` function where `amr_corpus` is the path a main ara corpus folder, i.e. the folder containing one subfolder per dish with one amr file per recipe. This will create three folders 'train', 'val' and 'test' in the './data/ara_amrs' directory, such that the train folder will contain train_per\*100 percent of the available files, the val folder will contain val\*100 percent of the files and the test folder the rest. The files are randomly assigned to the splits.
 
 **Reproducible Splits**<br>
 In order to assign each recipe file to a dataset split and additionally save the information about the assignment into a file first run `create_recipe2split_assignment(amr_corpus_dir, split_name, train_per, val_per, test_per)`. This will randomly assign the recipe files from amr_corpus_dir to the train, val and test split according to the specified split proportions. The function does not create these splits, but only saves the assingments into a file './data_splits/[split_name]' with the following format: 
@@ -89,6 +89,7 @@ train \t waffles/waffles_0.conllu
 val \t baked_ziti/baked-ziti_2.conllu
 ...
 ```
+Alternatively, one can run `create_recipe2split_assignment(amr_corpus_dir, split_name, train_per, val_per, test_per, test_recipes)` instead and pass a list of recipe file names as the optional test_recipes argument. In this case, the test split will consist of exactly those recipes.   
 
 The actual data set splits can then be created by running the function `create_split_files_from_assignment(assignment_file, corpus_dir, split_dir)` which will copy the files listed in `assignment_file` (paths need to be relative to `corpus_dir`) from `corpus_dir` to the appropriate subdirectory of `split_dir`, i.e. train, val or test directory.
 
