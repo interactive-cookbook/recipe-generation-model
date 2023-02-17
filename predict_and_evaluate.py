@@ -1,7 +1,7 @@
 import json
 import os
 from pathlib import Path
-from statistics import mean
+from argparse import ArgumentParser
 
 from inference import generate_data_set, RecipeGenerator
 from evaluation import read_file_for_eval, compute_meteor, compute_bleurt, compute_rouge, compute_chrf, compute_bleu, compute_chrf_plus
@@ -9,6 +9,21 @@ from evaluation import read_file_for_eval, compute_meteor, compute_bleurt, compu
 
 def run_and_save_evaluation(pred_file, ref_file, context_len, model_name, test_data_set,
                             beam_size, linearization, model_config):
+    """
+    Computes BLEU, ROUGE, chrF, chrF++, BLEURT and METEOR scores for the predicted sentences in pred_file
+    relative to the reference sentences in ref_file
+    All values of the metrics get written into a file named after the pred_file but with suffix "_evaluation.txt"
+    Additionally parameters used for creating the predictions are stored in the file
+    :param pred_file: path to the file with the predictions, one sentence per line
+    :param ref_file: path to the file with the references, one sentence per line, same order as in pred_file
+    :param context_len: length of the context used for creating the predictions
+    :param model_name: name of the model that was used to obtain the predictions
+    :param test_data_set: name of the dataset the predictions belong to
+    :param beam_size: beam size used for inference
+    :param linearization: linearization type used for inference
+    :param model_config: path to the model_config file (i.e. with the training parameters and other model parameters)
+    :return:
+    """
     pred_sentences = read_file_for_eval(pred_file)
     ref_sentences = read_file_for_eval(ref_file)
 
@@ -35,9 +50,17 @@ def run_and_save_evaluation(pred_file, ref_file, context_len, model_name, test_d
 
 
 def pred_and_eval(inference_config_file):
-
+    """
+    Runs the inference as specified in the configuration file, computes all automatic metrics and saves them
+    into a file with the same name as the output file with the suffix '_evaluation.txt'
+    :param inference_config_file:
+    :return:
+    """
+    # runs inference, i.e. creates a file with the predictions
     generator: RecipeGenerator = generate_data_set(inference_config_file)
 
+    # extract all information from the config file that are relevant for creating the output paht / file and
+    # that should be saved together with the evaluation results
     with open(inference_config_file) as conf:
         config_args = json.load(conf)
     inf_config = config_args['test_args']
@@ -56,7 +79,16 @@ def pred_and_eval(inference_config_file):
 
 
 def get_inference_out_path(context_len, model_path, output_file, model_checkpoint=None) -> tuple:
+    """
 
+    :param context_len: length of the context
+    :param model_path: path to the model
+    :param output_file: name of the file with the model output
+    :param model_checkpoint: path to the checkpoint folder if different from model_path
+    :return: path to the file with the predictions (i.e. output from running inference)
+            path to the file with the reference sentences
+            name of the model (without the path structure)
+    """
     model_path = os.path.join(Path(model_path))
     model_name = str(model_path.split(os.sep)[-1])
     if model_checkpoint:
@@ -71,14 +103,15 @@ def get_inference_out_path(context_len, model_path, output_file, model_checkpoin
 
 
 if __name__=='__main__':
+    parser = ArgumentParser()
+    parser.add_argument("--config", required=True, help="path to the configuration file for generation")
+    args = parser.parse_args()
+    config_file = args.config
+    pred_and_eval(config_file)
 
-    inf_dir = './inference_configs'
-    for model_dir in os.listdir(inf_dir):
-        if model_dir == 'old' or model_dir == 'validation_set':
-            continue
-        for inf_file in os.listdir(os.path.join(inf_dir, model_dir)):
-            inf_file_path = os.path.join(inf_dir, model_dir, inf_file)
-            pred_and_eval(inf_file_path)
+    #pred_and_eval('./inference_configs/t5_amrlib_ara1_original_0/inf_t5_amrlib_ara1_original_0_ara1_split_0.json')
+
+
 
 
 
