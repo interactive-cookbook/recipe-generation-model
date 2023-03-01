@@ -132,4 +132,9 @@ For example, if `--input` is `some_folder/output.txt` then there should also be 
 
 The script `predict_and_evaluate.py ` can be used to generate text using a trained model, directly evaluate the model and save the results into a file. 
 
-To do so, run the `pred_and_eval(inference_config_file)` function with the path to an inference configuration .json file as argument. This will generate the texts as specified in the configuration file and save the predicted and reference, then compute all evaluation metrices and save the output to a file with the same name as the file with the predicted texts plus the suffix '\_evaluation' in the same folder.
+To do so, run the `python --config [config path]` function with the path to an inference configuration .json file as argument. This will generate the texts as specified in the configuration file and save the predicted and reference, then compute all evaluation metrices and save the output to a file with the same name as the file with the predicted texts plus the suffix '\_evaluation' in the same folder.
+
+The evaluation results will be saved in a json format. In order to create a csv table with an overview over all evaluation results, run `python create_eval.py --eval-path [eval-path] --csv-path [output file]` <br>
+* `eval-path`: the path to the main directory where the model outputs and evaluation results are saved; the function will consider all files that have the following path: "[eval-path]/[any folder name]/[X]_context/[file_name]_evaluation.txt
+* `csv-path`: path to the output file that gets created
+
