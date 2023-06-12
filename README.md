@@ -1,8 +1,10 @@
 # recipe-generation-model
 
-This repository contains part of the code for the master thesis project of generating new recipe texts based on information from two recipes for the same dish. In particular, this repository contains the code to train a text generation model that generates a sentence based on the corresponding amr representation and the n previously generated sentences. 
+This repository contains the code for the AMR-to-text generation models from "From Sentence to Action: Splitting AMR Graphs for Recipe Instructions", DMR 2023. 
 
-The generation model is a pretrained T5 model from huggingface which gets fine-tuned on amr-to-text generation. The code is based on and adapted from the scripts from the [amrlib library](https://github.com/bjascob/amrlib).
+In particular, this repository contains the code to fine-tune an AMR-to-text generation model to generate a sentence based on the corresponding amr representation and the n previously generated sentences. 
+
+The generation model is the pretrained, T5-based AMR-to-text model [generate_t5wtense](https://github.com/bjascob/amrlib-models) from the [amrlib library](https://github.com/bjascob/amrlib). The code for fine-tuning is based on and adapted from the original [training scripts](https://github.com/bjascob/amrlib/tree/master/scripts).
 
 The Readme contains basic information about
 * [Preparing data sets](https://github.com/interactive-cookbook/recipe-generation-model#data-set-preparation)
