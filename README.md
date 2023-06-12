@@ -19,17 +19,8 @@ The [pytorch library](https://pytorch.org/get-started/locally/) (1.12.1)
 [Transformers](https://huggingface.co/docs/transformers/installation#install-with-conda) from Huggingface (version 3 will probably not work) (4.24.0):
 * `conda install -c huggingface transformers` OR `pip install transformers` 
 
-[Sentence Piece](https://github.com/google/sentencepiece#installation) (0.1.97)
-* `pip install sentencepiece`
+Then install the remaining dependencies `pip install -r requirements.txt`
 
-For evaluation: [evaluate library](https://huggingface.co/docs/evaluate/index) from Huggingface and the dependencies for the computed metrices (0.3.0):
-* `pip install evaluate` (0.0.2)
-* `pip install sacrebleu` (2.3.1)
-* `pip install rouge_score` (0.1.2)
-* `pip install git+https://github.com/google-research/bleurt.git` (0.0.2)
-
-nltk (3.7)
-* `pip install nltk`
 
 ## Data set preparation
 
