@@ -12,13 +12,12 @@ The Readme contains basic information about
 More detailed information about each of the steps can be found in the Wiki.
 
 ## Requirements 
-Tested with python 3.7 and 3.8 (and previously also with python 3.6 but huggingface evaluate library requires python 3.7) and the library versions listed in brackets below.
+Tested with Python 3.7 and 3.8 (Huggingface evaluate library requires at least python 3.7) and the library versions listed below. 
 
 The [pytorch library](https://pytorch.org/get-started/locally/) (1.12.1)
 
 [Transformers](https://huggingface.co/docs/transformers/installation#install-with-conda) from Huggingface (version 3 will probably not work) (4.24.0):
-* `conda install -c huggingface transformers` (did not work under Linux for me)
-* `pip install transformers` (did not work Windows for me)
+* `conda install -c huggingface transformers` OR `pip install transformers` 
 
 [Sentence Piece](https://github.com/google/sentencepiece#installation) (0.1.97)
 * `pip install sentencepiece`
@@ -106,7 +105,7 @@ Note that all logging information is only printed to the command line. In order 
 **Note**: the transformer Trainer.train() function by default uses all availabel gpu nodes if "no_cuda": false is set. In order to restrict training to a single gpu run e.g. `CUDA_VISIBLE_DEVICES="3", python training.py --config [path_to_config_file]`
 
 **Using comet.ml**<br>
-To track the training process with [comet.ml](https://www.comet.com/kastein#projects) uncomment lines 61-64 and line 130 in training.py and add your api key to line 61. 
+To track the training process with [comet.ml](https://www.comet.com/) uncomment lines 61-64 and line 130 in training.py and add your api key to line 61. 
 
 ## Run prediction
 
