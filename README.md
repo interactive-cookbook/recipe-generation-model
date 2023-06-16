@@ -13,6 +13,8 @@ The Readme contains basic information about
 * and [Evaluating](https://github.com/interactive-cookbook/recipe-generation-model#automatic-evaluation) the generated texts
 More detailed information about each of the steps can be found in the Wiki.
 
+The trained checkpoints used for generating the recipes presented in the crowd-sourcing evaluation in Stein et al. 2023 are available [here](https://drive.google.com/file/d/15bLsLA3ZbsZLJ4lYKsIjP5gY-pscAcdG/view?usp=sharing): 
+
 ## Requirements 
 Tested with Python 3.7 and 3.8 (Huggingface evaluate library requires at least python 3.7) and the library versions listed below. 
 
